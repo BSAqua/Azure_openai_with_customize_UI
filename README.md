@@ -55,10 +55,10 @@ A Flask application that integrates Azure OpenAI Service with a customizable use
     http://localhost:5000  
     ```
 
-#Usage
+# Usage
  
 
-#User Interface
+# User Interface
  
 
 Max Tokens: Set the maximum number of tokens for the response.
@@ -72,15 +72,15 @@ Predefined Prompts
  
 
 Use the predefined prompts in the prompt container to quickly generate queries.
-#Toggle Theme
+# Toggle Theme
  
 
 Use the "Toggle Theme" button to switch between light and dark themes.
-Contributing
+# Contributing
  
 Contributions are welcome! Please fork this repository and submit a pull request for any enhancements or bug fixes.
 
-#License
+# License
  
 This project is licensed under the MIT License. See the LICENSE file for details.
 
