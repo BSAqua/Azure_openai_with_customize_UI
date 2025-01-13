@@ -16,6 +16,7 @@
             background-color: #1e1e1e;  
             color: #d4d4d4;  
         }  
+  
         .header {  
             display: flex;  
             align-items: center;  
@@ -26,12 +27,14 @@
             font-size: 16px;  
             border-bottom: 1px solid #555;  
         }  
+  
         .container {  
-            display: flex;
+            display: flex;  
             flex: 1;  
             overflow: hidden;  
             height: calc(100vh - 50px);  
         }  
+  
         .settings {  
             display: flex;  
             flex-direction: column;  
@@ -41,10 +44,12 @@
             min-width: 200px;  
             max-width: 50%;  
         }  
+  
         .settings label {  
             font-weight: bold;  
             margin-top: 10px;  
         }  
+  
         .settings input, .settings textarea {  
             width: calc(100% - 10px);  
             padding: 5px;  
@@ -56,6 +61,7 @@
             border: 1px solid #555;  
             border-radius: 5px;  
         }  
+  
         .settings button, .settings select {  
             padding: 10px 20px;  
             font-size: 14px;  
@@ -68,10 +74,12 @@
             margin-top: 10px;  
             transition: background-color 0.3s, border-color 0.3s;  
         }  
+  
         .settings button:hover, .settings select:hover {  
             background-color: #0056b3;  
             border-color: #0056b3;  
         }  
+  
         .chat-container {  
             flex: 1;  
             display: flex;  
@@ -80,6 +88,7 @@
             overflow-y: auto;  
             background-color: #252526;  
         }  
+  
         .message {  
             margin: 10px 0;  
             padding: 10px;  
@@ -87,18 +96,21 @@
             max-width: 60%;  
             font-size: 16px;  
             line-height: 1.5;  
-            text-align: left; /* 確保文字靠左排列 */  
+            text-align: left; /* Ensure text is left-aligned */  
         }  
+  
         .message.user {  
             align-self: flex-end;  
             background-color: #007acc;  
             color: #ffffff;  
         }  
+  
         .message.assistant {  
             align-self: flex-start;  
             background-color: #3c3c3c;  
             color: #d4d4d4;  
         }  
+  
         .code-block {  
             background-color: #2d2d2d;  
             color: #d4d4d4;  
@@ -108,6 +120,7 @@
             white-space: pre;  
             position: relative;  
         }  
+  
         .copy-button {  
             position: absolute;  
             top: 10px;  
@@ -119,15 +132,18 @@
             border-radius: 3px;  
             cursor: pointer;  
         }  
+  
         .copy-button:hover {  
             background-color: #0056b3;  
         }  
+  
         .input-container {  
             display: flex;  
             padding: 10px;  
             background-color: #3c3c3c;  
             border-top: 1px solid #555;  
         }  
+  
         .input-container textarea {  
             flex: 1;  
             padding: 10px;  
@@ -139,9 +155,10 @@
             border-radius: 5px;  
             margin-right: 10px;  
             resize: none;  
-            max-height: 100px; /* 限制顯示行數 */  
-            overflow-y: auto; /* 當超過限制行數時顯示滾動條 */  
+            max-height: 100px; /* Limit the number of displayed rows */  
+            overflow-y: auto; /* Show scrollbar when content exceeds the limit */  
         }  
+  
         .input-container button {  
             padding: 10px 20px;  
             font-size: 14px;  
@@ -156,112 +173,137 @@
             align-items: center;  
             justify-content: center;  
         }  
+  
         .input-container button svg {  
             fill: #ffffff;  
             width: 20px;  
             height: 20px;  
         }  
+  
         .input-container button:hover {  
             background-color: #0056b3;  
             border-color: #0056b3;  
         }  
+  
         ::-webkit-scrollbar {  
             width: 12px;  
         }  
+  
         ::-webkit-scrollbar-track {  
             background: #2d2d2d;  
         }  
+  
         ::-webkit-scrollbar-thumb {  
             background-color: #007bff;  
             border-radius: 6px;  
             border: 3px solid #2d2d2d;  
         }  
+  
         .light-theme {  
             background-color: #ffffff;  
             color: #000000;  
         }  
+  
         .light-theme .header {  
             background-color: #007bff;  
             color: #ffffff;  
             border-bottom: 1px solid #ccc;  
         }  
+  
         .light-theme .input-container {  
             background-color: #f1f1f1;  
             border-top: 1px solid #ccc;  
         }  
+  
         .light-theme .input-container textarea {  
             background-color: #ffffff;  
             color: #000000;  
         }  
+  
         .light-theme .input-container button {  
             background-color: #007bff;  
             color: #ffffff;  
             border: 1px solid #007bff;  
         }  
+  
         .light-theme .input-container button:hover {  
             background-color: #0056b3;  
             border-color: #0056b3;  
         }  
+  
         .light-theme .settings {  
             background-color: #f1f1f1;  
             border-right: 1px solid #ccc;  
         }  
+  
         .light-theme .settings input, .light-theme .settings textarea {  
             background-color: #ffffff;  
             color: #000000;  
             border: 1px solid #ccc;  
         }  
+  
         .light-theme .settings button, .light-theme .settings select {  
             background-color: #007bff;  
             color: #ffffff;  
             border: 1px solid #007bff;  
         }  
+  
         .light-theme .settings button:hover, .light-theme .settings select:hover {  
             background-color: #0056b3;  
             border-color: #0056b3;  
         }  
+  
         .light-theme .chat-container {  
             background-color: #f9f9f9;  
         }  
+  
         .light-theme .message {  
             background-color: #e0e0e0;  
         }  
+  
         .light-theme .message.user {  
             background-color: #cfe9ff;  
         }  
+  
         .light-theme ::-webkit-scrollbar-track {  
             background: #f1f1f1;  
         }  
+  
         .light-theme ::-webkit-scrollbar-thumb {  
             background-color: #007bff;  
             border-radius: 6px;  
             border: 3px solid #f1f1f1;  
         }  
+  
         .resizer {  
             width: 10px;  
             background: #555;  
             cursor: ew-resize;  
             position: relative;  
         }  
+  
         .prompt-container {  
             display: flex;  
-            flex-direction: column; /* 標題按鈕垂直排列 */  
-            justify-content: center; /* 垂直居中 */  
-            align-items: center; /* 水平居中 */  
+            flex-direction: column; /* Align title buttons vertically */  
+            justify-content: center; /* Center vertically */  
+            align-items: center; /* Center horizontally */  
             padding: 20px;  
             background-color: #1e1e1e;  
             border: 1px solid #3c3c3c;  
             border-radius: 10px;  
         }  
+  
         .prompt-title {  
             font-size: 24px;  
             margin-bottom: 20px;  
         }  
+  
         .prompt-buttons {  
             display: flex;  
             justify-content: space-evenly;  
             width: 100%;  
         }  
+  
         .prompt-button {  
             display: flex;  
             flex-direction: column;  
@@ -276,22 +318,26 @@
             cursor: pointer;  
             transition: background-color 0.3s, border-color 0.3s;  
         }  
+  
         .prompt-button:hover {  
             background-color: #2d2d2d;  
             border-color: #007bff;  
         }  
+  
         .prompt-button span {  
             margin-top: 10px;  
             font-size: 12px;  
             text-align: center;  
         }  
-        /* 提示框樣式 */  
+  
+        /* Tooltip styles */  
         .tooltip-container {  
             position: relative;  
             display: inline-block;  
             cursor: pointer;  
             margin-left: 5px;  
         }  
+  
         .tooltip-container .tooltip-icon {  
             width: 16px;  
             height: 16px;  
@@ -304,6 +350,7 @@
             justify-content: center;  
             font-size: 12px;  
         }  
+  
         .tooltip-container .tooltip-text {  
             visibility: hidden;  
             width: 200px;  
@@ -313,22 +360,24 @@
             border-radius: 5px;  
             padding: 5px;  
             position: absolute;  
-            z-index: 10; /* 確保提示框在最上層 */  
-            bottom: 125%; /* 在容器的上方顯示 */  
+            z-index: 10; /* Ensure tooltip is on top */  
+            bottom: 125%; /* Show above the container */  
             left: 50%;  
-            transform: translateX(-50%); /* 使用transform使其居中 */  
+            transform: translateX(-50%); /* Center using transform */  
             opacity: 0;  
             transition: opacity 0.3s;  
-            white-space: normal; /* 確保文本换行 */  
+            white-space: normal; /* Ensure text wraps */  
         }  
+  
         .tooltip-container:hover .tooltip-text {  
             visibility: visible;  
             opacity: 1;  
         }  
+  
         .tooltip-container .tooltip-text::after {  
             content: "";  
             position: absolute;  
-            top: 100%; /* 在提示框底部顯示箭頭 */  
+            top: 100%; /* Show arrow at the bottom of the tooltip */  
             left: 50%;  
             transform: translateX(-50%);  
             border-width: 5px;  
@@ -339,39 +388,44 @@
 </head>  
 <body class="dark-theme">  
     <div class="header">  
-        <h1>ChatGPT-Thi</h1>  
+        <h1>ChatGPTUI</h1>  
     </div>  
     <div class="container">  
         <div class="settings" id="settings">  
             <label for="max-tokens">Max Tokens :  
                 <div class="tooltip-container">  
                     <span class="tooltip-icon">i</span>  
-                    <span class="tooltip-text">最小值為1，最大值為4096。可以回應的字數量。</span>  
+                    <span class="tooltip-text">Minimum value is 1, maximum value is 4096. The number of tokens for the response.</span>  
                 </div>  
             </label>  
             <input type="number" id="max-tokens" value="100" min="1" max="4096">  
             <label for="top-p">Top P:  
                 <div class="tooltip-container">  
                     <span class="tooltip-icon">i</span>  
-                    <span class="tooltip-text">範圍為0.0到1.0。降低Top P表示模型會產生更重複以及確定性的回應。增加溫度將導致更多未預期或創意的回應。</span>  
+                    <span class="tooltip-text">Range is 0.0 to 1.0. Lowering Top P makes the model generate more repetitive and deterministic responses. Increasing temperature will result in more unexpected or creative responses.</span>  
                 </div>  
             </label>  
             <input type="number" id="top-p" value="1.0" step="0.1" min="0.0" max="1.0">  
             <label for="temperature">Temperature:  
                 <div class="tooltip-container">  
                     <span class="tooltip-icon">i</span>  
-                    <span class="tooltip-text">範圍為0.0到1.0。降低溫度表示模型會產生更重複以及確定性的回應。增加溫度將導致更多未預期或創意的回應。</span>  
+                    <span class="tooltip-text">Range is 0.0 to 1.0. Lowering temperature makes the model generate more repetitive and deterministic responses. Increasing temperature will result in more unexpected or creative responses.</span>  
                 </div>  
             </label>  
             <input type="number" id="temperature" value="0.7" step="0.1" min="0.0" max="1.0">  
             <label for="message-count">Number of past messages to include:  
                 <div class="tooltip-container">  
                     <span class="tooltip-icon">i</span>  
-                    <span class="tooltip-text">最小值為1，最大值為20。過去訊息數目。將此數字設定為 10 將會包含 5 個使用者查詢和 5 個系統回應。</span>  
+                    <span class="tooltip-text">Minimum value is 1, maximum value is 20. Number of past messages. Setting this number to 10 will include 5 user queries and 5 system responses.</span>  
                 </div>  
             </label>  
             <input type="number" id="message-count" value="5" min="1" max="20">  
-            <button onclick="toggleTheme()">切換主題</button>  
+            <button onclick="toggleTheme()">Toggle Theme</button>  
+            <hr>  
+            <div class="instructions-container">  
+                <label for="model-instructions">Give the model instructions and context</label>  
+                <textarea id="model-instructions" placeholder="Enter model instructions and context here..."></textarea>  
+            </div>  
             <hr>  
             <h3>Upload File</h3>  
             <input type="file" id="file-upload">  
@@ -402,19 +456,19 @@
                     </div>  
                 </div>  
             </div>  
-            <!-- 對話消息會顯示在這裡 -->  
+            <!-- Conversation messages will be displayed here -->  
         </div>  
     </div>  
     <div class="input-container">  
-        <textarea id="user-input" placeholder="在這裡輸入你的消息..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { sendMessage(); event.preventDefault(); }"></textarea>  
+        <textarea id="user-input" placeholder="Enter your message here..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { sendMessage(); event.preventDefault(); }"></textarea>  
         <button id="send-button" onclick="sendMessage()">  
-            <!-- 發送圖標 (SVG) -->  
+            <!-- Send icon (SVG) -->  
             <svg viewBox="0 0 24 24">  
                 <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>  
             </svg>  
         </button>  
         <button id="stop-button" onclick="stopGeneration()" style="display: none;">  
-            <!-- 中止圖標 (SVG) -->  
+            <!-- Stop icon (SVG) -->  
             <svg viewBox="0 0 24 24">  
                 <path d="M6 6h12v12H6z"/>  
             </svg>  
@@ -424,15 +478,15 @@
         let darkTheme = true;  
         let messages = [];  
         let generating = false;  
-        let cachedResults = []; // 緩存搜索結果  
+        let cachedResults = []; // Cache search results  
   
-        // 使用預設提示  
+        // Use preset prompt  
         function usePrompt(prompt) {  
             document.getElementById('user-input').value = prompt;  
             sendMessage();  
         }  
   
-        // 檢查模式變更  
+        // Check mode change  
         function checkMode() {  
             const mode = document.getElementById('mode-select').value;  
             const promptContainer = document.getElementById('prompt-container');  
@@ -443,10 +497,11 @@
             }  
         }  
   
-        // 發送消息函數  
+        // Send message function  
         function sendMessage() {  
             const userInput = document.getElementById('user-input').value.trim();  
-            if (!userInput) return;  
+            const modelInstructions = document.getElementById('model-instructions').value.trim();  
+            if (!userInput && !modelInstructions) return;  
   
             addMessage('user', userInput);  
             messages.push({ role: 'user', content: userInput });  
@@ -460,26 +515,30 @@
             const messageCount = parseInt(document.getElementById('message-count').value);  
   
             const data = {  
-                messages: messages.slice(-messageCount), // 確保發送的是最近的消息  
+                messages: messages.slice(-messageCount), // Ensure sending the most recent messages  
                 max_tokens: maxTokens,  
                 top_p: topP,  
                 temperature: temperature  
             };  
   
-            if (mode === 'document') {  
-                data.query = userInput; // 添加查詢字段  
-                const context = cachedResults.map(result => result.chunk).join('\n\n');// 將所有緩存的內容合併為一個上下文  
-                data.messages.push({ role: 'system', content: context }); // 將上下文添加到消息  
+            if (modelInstructions) {  
+                data.messages.unshift({ role: 'system', content: modelInstructions });  
             }  
   
-            console.log('發送的數據:', data); // 打印發送的數據以進行調試  
+            if (mode === 'document') {  
+                data.query = userInput; // Add query field  
+                const context = cachedResults.map(result => result.chunk).join('\n\n'); // Combine all cached content into one context  
+                data.messages.push({ role: 'system', content: context }); // Add context to messages  
+            }  
+  
+            console.log('Data sent:', data); // Log data sent for debugging  
   
             toggleButtons(true);  
   
             fetch(endpoint, {  
                 method: 'POST',  
                 headers: {  
-                    'Content-Type': 'application/json'  
+                    'Content-Type': 'application/json
                 },  
                 body: JSON.stringify(data)  
             })  
@@ -509,13 +568,13 @@
             document.getElementById('user-input').value = '';  
         }  
   
-        // 添加消息到對話框  
+        // Add message to chat container  
         function addMessage(role, content) {  
             const chatContainer = document.getElementById('chat-container');  
             const messageDiv = document.createElement('div');  
             messageDiv.classList.add('message', role);  
   
-            // 檢查是否包含程式碼塊  
+            // Check if content contains code blocks  
             if (content.includes('```')) {  
                 const parts = content.split('```');  
                 parts.forEach((part, index) => {  
@@ -552,14 +611,14 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;  
         }  
   
-        // 切換主題  
+        // Toggle theme  
         function toggleTheme() {  
             darkTheme = !darkTheme;  
             document.body.classList.toggle('dark-theme', darkTheme);  
             document.body.classList.toggle('light-theme', !darkTheme);  
         }  
   
-        // 切換按鈕顯示  
+        // Toggle buttons display  
         function toggleButtons(generating) {  
             const sendButton = document.getElementById('send-button');  
             const stopButton = document.getElementById('stop-button');  
@@ -567,12 +626,12 @@
             stopButton.style.display = generating ? 'flex' : 'none';  
         }  
   
-        // 中止生成  
+        // Stop generation  
         function stopGeneration() {  
             toggleButtons(false);  
         }  
   
-        // 上傳文件  
+        // Upload file  
         function uploadFile() {  
             const fileInput = document.getElementById('file-upload');  
             const file = fileInput.files[0];  
@@ -604,7 +663,7 @@
             });  
         }  
   
-        // 用於調整窗口大小的函數  
+        // Function to resize the settings panel  
         const settings = document.getElementById('settings');  
         const resizer = document.getElementById('resizer');  
         const container = document.querySelector('.container');  
@@ -631,18 +690,18 @@
             document.documentElement.removeEventListener('mouseup', stopDrag, false);  
         }  
   
-        // 檢查輸入值是否在範圍內  
+        // Check if input value is within range  
         function checkInputRange(inputId, min, max) {  
             const input = document.getElementById(inputId);  
             input.addEventListener('input', () => {  
                 if (input.value < min || input.value > max) {  
-                    alert(`值超出範圍！${inputId} 的有效範圍是 ${min} 到 ${max}`);  
-                    input.value = Math.min(Math.max(input.value, min), max); // 重置为有效范围内的值  
+                    alert(`Value out of range! ${inputId} valid range is ${min} to ${max}`);  
+                    input.value = Math.min(Math.max(input.value, min), max); // Reset to a valid value within range  
                 }  
             });  
         }  
   
-        // 初始化檢查模式和輸入範圍  
+        // Initialize checking mode and input range  
         document.addEventListener('DOMContentLoaded', function() {  
             checkMode();  
             checkInputRange('max-tokens', 1, 4096);  
