@@ -23,8 +23,6 @@ body {
   
 .container {  
     display: flex;  
-    flex: 1;  
-    overflow: hidden;  
     height: calc(100vh - 50px);  
 }  
   
@@ -36,6 +34,7 @@ body {
     overflow-y: auto;  
     min-width: 200px;  
     max-width: 50%;  
+    box-sizing: border-box;  
 }  
   
 .settings label {  
@@ -73,6 +72,14 @@ body {
     border-color: #0056b3;  
 }  
   
+.chat-section {  
+    display: flex;  
+    flex-direction: column;  
+    flex: 1;  
+    overflow: hidden;  
+    background-color: #252526;  
+}  
+  
 .chat-container {  
     flex: 1;  
     display: flex;  
@@ -89,7 +96,8 @@ body {
     max-width: 60%;  
     font-size: 16px;  
     line-height: 1.5;  
-    text-align: left; /* Ensure text is left-aligned */  
+    text-align: left;  
+    white-space: pre-wrap; /* 保留原本的換行和縮排 */  
 }  
   
 .message.user {  
@@ -135,6 +143,8 @@ body {
     padding: 10px;  
     background-color: #3c3c3c;  
     border-top: 1px solid #555;  
+    width: 100%;  
+    box-sizing: border-box;  
 }  
   
 .input-container textarea {  
@@ -148,8 +158,8 @@ body {
     border-radius: 5px;  
     margin-right: 10px;  
     resize: none;  
-    max-height: 100px; /* Limit the number of displayed lines */  
-    overflow-y: auto; /* Show scrollbar when exceeding the limit */  
+    max-height: 100px;  
+    overflow-y: auto;  
 }  
   
 .input-container button {  
@@ -278,12 +288,13 @@ body {
 .prompt-container {  
     display: flex;  
     flex-direction: column;  
-    justify-content: center; /* Vertically center */  
-    align-items: center; /* Horizontally center */  
+    justify-content: center;  
+    align-items: center;  
     padding: 20px;  
     background-color: #1e1e1e;  
     border: 1px solid #3c3c3c;  
     border-radius: 10px;  
+    width: 100%;  
 }  
   
 .prompt-title {  
@@ -323,7 +334,7 @@ body {
     text-align: center;  
 }  
   
-/* Tooltip styles */  
+/* 提示框樣式 */  
 .tooltip-container {  
     position: relative;  
     display: inline-block;  
@@ -353,13 +364,13 @@ body {
     border-radius: 5px;  
     padding: 5px;  
     position: absolute;  
-    z-index: 10; /* Ensure tooltip is on top */  
-    bottom: 125%; /* Show above container */  
+    z-index: 10;  
+    bottom: 125%;  
     left: 50%;  
-    transform: translateX(-50%); /* Center using transform */  
+    transform: translateX(-50%);  
     opacity: 0;  
     transition: opacity 0.3s;  
-    white-space: normal; /* Ensure text wraps */  
+    white-space: normal;  
 }  
   
 .tooltip-container:hover .tooltip-text {  
@@ -370,7 +381,7 @@ body {
 .tooltip-container .tooltip-text::after {  
     content: "";  
     position: absolute;  
-    top: 100%; /* Show arrow at bottom of tooltip */  
+    top: 100%;  
     left: 50%;  
     transform: translateX(-50%);  
     border-width: 5px;  
