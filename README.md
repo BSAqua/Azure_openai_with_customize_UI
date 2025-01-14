@@ -1,6 +1,6 @@
-# ChatGPTUI
+# Your_ChatGPT
  
-ChatGPTUI is a web-based chat application that integrates with OpenAI's GPT models. This application allows users to interact with an AI assistant, upload documents, and receive context-aware responses based on the uploaded content.
+Your_ChatGPT is a web-based chat application that integrates with OpenAI's GPT models. This application allows users to interact with an AI assistant, upload documents, and receive context-aware responses based on the uploaded content.
 
 ## Features
  
