@@ -1,9 +1,49 @@
 let darkTheme = true;  
 let messages = [];  
 let generating = false;  
-let cachedResults = []; // Cached search results  
+let cachedResults = []; // 緩存搜索結果  
+const md = window.markdownit({  
+    html: true, // 启用 HTML 标签  
+    breaks: true, // 将换行符转换为 <br>  
+    linkify: true // 自动识别链接  
+});  
   
-// Dynamically adjust textarea height  
+document.addEventListener('DOMContentLoaded', function() {  
+    checkMode();  
+    checkInputRange('max-tokens', 1, 4096);  
+    checkInputRange('top-p', 0.0, 1.0);  
+    checkInputRange('temperature', 0.0, 1.0);  
+    checkInputRange('message-count', 1, 20);  
+  
+    // Initialize textarea height  
+    adjustTextareaHeight();  
+    document.getElementById('user-input').addEventListener('input', adjustTextareaHeight); // Bind input event  
+  
+    // Bind keydown event to send message on Enter key press  
+    document.getElementById('user-input').addEventListener('keydown', function(event) {  
+        if (event.key === 'Enter' && !event.shiftKey) {  
+            event.preventDefault();  
+            sendMessage();  
+        }  
+    });  
+});  
+  
+// Check mode change  
+function checkMode() {  
+    const mode = document.getElementById('mode-select').value;  
+    const promptContainer = document.getElementById('prompt-container');  
+    const fileUploadContainer = document.getElementById('file-upload-container');  
+  
+    if (mode === 'document') {  
+        promptContainer.style.display = 'flex';  
+        fileUploadContainer.style.display = 'block'; // Show file upload section  
+    } else {  
+        promptContainer.style.display = 'none';  
+        fileUploadContainer.style.display = 'none'; // Hide file upload section  
+    }  
+}  
+  
+// Adjust textarea height dynamically  
 function adjustTextareaHeight() {  
     const textarea = document.getElementById('user-input');  
     textarea.style.height = 'auto'; // Reset height to calculate new height  
@@ -22,21 +62,6 @@ function adjustTextareaHeight() {
 function usePrompt(prompt) {  
     document.getElementById('user-input').value = prompt;  
     sendMessage();  
-}  
-  
-// Check mode change  
-function checkMode() {  
-    const mode = document.getElementById('mode-select').value;  
-    const promptContainer = document.getElementById('prompt-container');  
-    const fileUploadContainer = document.getElementById('file-upload-container');  
-  
-    if (mode === 'document') {  
-        promptContainer.style.display = 'flex';  
-        fileUploadContainer.style.display = 'block'; // Show file upload section  
-    } else {  
-        promptContainer.style.display = 'none';  
-        fileUploadContainer.style.display = 'none'; // Hide file upload section  
-    }  
 }  
   
 // Send message function  
@@ -117,13 +142,17 @@ function addMessage(role, content) {
     const messageDiv = document.createElement('div');  
     messageDiv.classList.add('message', role);  
   
+    // Convert Markdown to HTML  
+    const htmlContent = md.render(content);  
+    console.log('Generated HTML:', htmlContent); // 打印生成的 HTML 内容  
+  
     // Check if message contains code block  
     if (content.includes('```')) {  
         const parts = content.split('```');  
         parts.forEach((part, index) => {  
             if (index % 2 === 0) {  
                 const textPart = document.createElement('div');  
-                textPart.textContent = part;  
+                textPart.innerHTML = md.render(part);  
                 messageDiv.appendChild(textPart);  
             } else {  
                 const codeBlock = document.createElement('div');  
@@ -147,7 +176,7 @@ function addMessage(role, content) {
             }  
         });  
     } else {  
-        messageDiv.textContent = content;  
+        messageDiv.innerHTML = htmlContent;  
     }  
   
     chatContainer.appendChild(messageDiv);  
@@ -206,8 +235,8 @@ function uploadFile() {
         console.error('Error:', error);  
         alert(`Error: ${error.message}`);  
     });  
-}  
-  
+} 
+
 // Function to resize the settings panel  
 const settings = document.getElementById('settings');  
 const resizer = document.getElementById('resizer');  
@@ -238,23 +267,11 @@ function stopDrag(e) {
 // Check if input value is within range  
 function checkInputRange(inputId, min, max) {  
     const input = document.getElementById(inputId);  
-    input.addEventListener('input', () => {  
+  
+    input.addEventListener('blur', () => {  
         if (input.value < min || input.value > max) {  
             alert(`Value out of range! Valid range for ${inputId} is ${min} to ${max}`);  
             input.value = Math.min(Math.max(input.value, min), max); // Reset to valid range value  
         }  
     });  
 }  
-  
-// Initialize mode check and input range  
-document.addEventListener('DOMContentLoaded', function() {  
-    checkMode();  
-    checkInputRange('max-tokens', 1, 4096);  
-    checkInputRange('top-p', 0.0, 1.0);  
-    checkInputRange('temperature', 0.0, 1.0);  
-    checkInputRange('message-count', 1, 20);  
-  
-    // Initialize textarea height  
-    adjustTextareaHeight();  
-    document.getElementById('user-input').addEventListener('input', adjustTextareaHeight); // Bind input event  
-});  
