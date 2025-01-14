@@ -171,13 +171,15 @@ function stopGeneration() {
 }  
   
 // Upload file  
-function uploadFile() {  
+  function uploadFile() {  
     const fileInput = document.getElementById('file-upload');  
     const file = fileInput.files[0];  
+    const overwrite = document.getElementById('overwrite-file').checked; // Get the value of the checkbox  
     if (!file) return;  
   
     const formData = new FormData();  
     formData.append('file', file);  
+    formData.append('overwrite', overwrite); // Append the overwrite option  
   
     fetch('/upload', {  
         method: 'POST',  
@@ -200,7 +202,7 @@ function uploadFile() {
         console.error('Error:', error);  
         alert(`Error: ${error.message}`);  
     });  
-}  
+}      
   
 // Functions for resizing settings panel  
 const settings = document.getElementById('settings');  
