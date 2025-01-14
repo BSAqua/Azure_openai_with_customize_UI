@@ -1,7 +1,7 @@
 let darkTheme = true;  
 let messages = [];  
 let generating = false;  
-let cachedResults = []; // Cache search results  
+let cachedResults = []; // Cached search results  
   
 // Dynamically adjust textarea height  
 function adjustTextareaHeight() {  
@@ -11,7 +11,7 @@ function adjustTextareaHeight() {
   
     const maxHeight = 100; // Set maximum height  
     if (textarea.scrollHeight > maxHeight) {  
-        textarea.style.overflowY = 'auto'; // Show scrollbar if height exceeds max height  
+        textarea.style.overflowY = 'auto'; // Show scrollbar if exceeded max height  
         textarea.style.height = `${maxHeight}px`; // Fix height to max height  
     } else {  
         textarea.style.overflowY = 'hidden'; // Hide scrollbar otherwise  
@@ -28,10 +28,14 @@ function usePrompt(prompt) {
 function checkMode() {  
     const mode = document.getElementById('mode-select').value;  
     const promptContainer = document.getElementById('prompt-container');  
+    const fileUploadContainer = document.getElementById('file-upload-container');  
+  
     if (mode === 'document') {  
         promptContainer.style.display = 'flex';  
+        fileUploadContainer.style.display = 'block'; // Show file upload section  
     } else {  
         promptContainer.style.display = 'none';  
+        fileUploadContainer.style.display = 'none'; // Hide file upload section  
     }  
 }  
   
@@ -53,7 +57,7 @@ function sendMessage() {
     const messageCount = parseInt(document.getElementById('message-count').value);  
   
     const data = {  
-        messages: messages.slice(-messageCount), // Ensure sending the most recent messages  
+        messages: messages.slice(-messageCount), // Ensure only recent messages are sent  
         max_tokens: maxTokens,  
         top_p: topP,  
         temperature: temperature  
@@ -65,11 +69,11 @@ function sendMessage() {
   
     if (mode === 'document') {  
         data.query = userInput; // Add query field  
-        const context = cachedResults.map(result => result.chunk).join('\n\n'); // Combine all cached content into one context  
+        const context = cachedResults.map(result => result.chunk).join('\n\n'); // Combine all cached content as context  
         data.messages.push({ role: 'system', content: context }); // Add context to messages  
     }  
   
-    console.log('Data sent:', data); // Log sent data for debugging  
+    console.log('Data sent:', data); // Log data sent for debugging  
   
     toggleButtons(true);  
   
@@ -104,7 +108,7 @@ function sendMessage() {
     });  
   
     document.getElementById('user-input').value = ''; // Clear input field  
-    adjustTextareaHeight(); // Ensure height adjustment after sending  
+    adjustTextareaHeight(); // Ensure height is adjusted after sending  
 }  
   
 // Add message to chat container  
@@ -113,7 +117,7 @@ function addMessage(role, content) {
     const messageDiv = document.createElement('div');  
     messageDiv.classList.add('message', role);  
   
-    // Check if it contains code block  
+    // Check if message contains code block  
     if (content.includes('```')) {  
         const parts = content.split('```');  
         parts.forEach((part, index) => {  
@@ -171,7 +175,7 @@ function stopGeneration() {
 }  
   
 // Upload file  
-  function uploadFile() {  
+function uploadFile() {  
     const fileInput = document.getElementById('file-upload');  
     const file = fileInput.files[0];  
     const overwrite = document.getElementById('overwrite-file').checked; // Get the value of the checkbox  
@@ -202,9 +206,9 @@ function stopGeneration() {
         console.error('Error:', error);  
         alert(`Error: ${error.message}`);  
     });  
-}      
+}  
   
-// Functions for resizing settings panel  
+// Function to resize the settings panel  
 const settings = document.getElementById('settings');  
 const resizer = document.getElementById('resizer');  
 const container = document.querySelector('.container');  
@@ -231,7 +235,7 @@ function stopDrag(e) {
     document.documentElement.removeEventListener('mouseup', stopDrag, false);  
 }  
   
-// Check if input values are within range  
+// Check if input value is within range  
 function checkInputRange(inputId, min, max) {  
     const input = document.getElementById(inputId);  
     input.addEventListener('input', () => {  
@@ -242,7 +246,7 @@ function checkInputRange(inputId, min, max) {
     });  
 }  
   
-// Initialize check mode and input range  
+// Initialize mode check and input range  
 document.addEventListener('DOMContentLoaded', function() {  
     checkMode();  
     checkInputRange('max-tokens', 1, 4096);  
