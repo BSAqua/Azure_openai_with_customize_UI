@@ -1,99 +1,379 @@
-<!DOCTYPE html>  
-<html lang="zh-Hant">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>ChatGPT-Thi</title>  
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- 正確引入 CSS 文件 -->  
-</head>  
-<body class="dark-theme">  
-    <div class="header">  
-        <h1>ChatGPTUI</h1>  
-    </div>  
-    <div class="container">  
-        <div class="settings" id="settings">  
-            <label for="max-tokens">Max Tokens :  
-                <div class="tooltip-container">  
-                    <span class="tooltip-icon">i</span>  
-                    <span class="tooltip-text">最小值為1，最大值為4096。可以回應的字數量。</span>  
-                </div>  
-            </label>  
-            <input type="number" id="max-tokens" value="100" min="1" max="4096">  
-            <label for="top-p">Top P:  
-                <div class="tooltip-container">  
-                    <span class="tooltip-icon">i</span>  
-                    <span class="tooltip-text">範圍為0.0到1.0。降低Top P表示模型會產生更重複以及確定性的回應。增加溫度將導致更多未預期或創意的回應。</span>  
-                </div>  
-            </label>  
-            <input type="number" id="top-p" value="1.0" step="0.1" min="0.0" max="1.0">  
-            <label for="temperature">Temperature:  
-                <div class="tooltip-container">  
-                    <span class="tooltip-icon">i</span>  
-                    <span class="tooltip-text">範圍為0.0到1.0。降低溫度表示模型會產生更重複以及確定性的回應。增加溫度將導致更多未預期或創意的回應。</span>  
-                </div>  
-            </label>  
-            <input type="number" id="temperature" value="0.7" step="0.1" min="0.0" max="1.0">  
-            <label for="message-count">Number of past messages to include:  
-                <div class="tooltip-container">  
-                    <span class="tooltip-icon">i</span>  
-                    <span class="tooltip-text">最小值為1，最大值為20。過去訊息數目。將此數字設定為 10 將會包含 5 個使用者查詢和 5 個系統回應。</span>  
-                </div>  
-            </label>  
-            <input type="number" id="message-count" value="5" min="1" max="20">  
-            <button onclick="toggleTheme()">切換主題</button>  
-            <hr>  
-            <div class="instructions-container">  
-                <label for="model-instructions">Give the model instructions and context</label>  
-                <textarea id="model-instructions" placeholder="在這裡輸入模型指令和上下文..."></textarea>  
-            </div>  
-            <hr>  
-            <h3>Upload File</h3>  
-            <input type="file" id="file-upload">  
-            <button onclick="uploadFile()">Upload</button>  
-            <hr>  
-            <h3>Mode</h3>  
-            <select id="mode-select" onchange="checkMode()">  
-                <option value="general">General OpenAI</option>  
-                <option value="document">Document-based OpenAI</option>  
-            </select>  
-        </div>  
-        <div class="resizer" id="resizer"></div>  
-        <div class="chat-container" id="chat-container">  
-            <div class="prompt-container" id="prompt-container">  
-                <div class="prompt-title">Start with a sample prompt</div>  
-                <div class="prompt-buttons">  
-                    <div class="prompt-button" onclick="usePrompt('我可以問關於什麼的問題?')">  
-                        想知道什麼  
-                        <span>可以問什麼問題?</span>  
-                    </div>  
-                    <div class="prompt-button" onclick="usePrompt('這裡有什麼相關的資料?')">  
-                        不知道這裡面的資料有什麼  
-                        <span>這裡有什麼相關的資料</span>  
-                    </div>  
-                    <div class="prompt-button" onclick="usePrompt('還沒想到有什麼預設prompt.....')">  
-                        ????  
-                        <span>還沒想到可以放什麼prompt....</span>  
-                    </div>  
-                </div>  
-            </div>  
-            <!-- 對話消息會顯示在這裡 -->  
-        </div>  
-    </div>  
-    <div class="input-container">  
-        <textarea id="user-input" placeholder="在這裡輸入你的消息..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { sendMessage(); event.preventDefault(); }"></textarea>  
-        <button id="send-button" onclick="sendMessage()">  
-            <!-- 發送圖標 (SVG) -->  
-            <svg viewBox="0 0 24 24">  
-                <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>  
-            </svg>  
-        </button>  
-        <button id="stop-button" onclick="stopGeneration()" style="display: none;">  
-            <!-- 中止圖標 (SVG) -->  
-            <svg viewBox="0 0 24 24">  
-                <path d="M6 6h12v12H6z"/>  
-            </svg>  
-        </button>  
-    </div>  
-    <script src="{{ url_for('static', filename='javascripts/scripts.js') }}"></script> <!-- 正確引入 JavaScript 文件 -->  
-</body>  
-</html>  
+body {  
+    font-family: Arial, sans-serif;  
+    margin: 0;  
+    padding: 0;  
+    display: flex;  
+    flex-direction: column;  
+    height: 100vh;  
+    transition: background-color 0.3s, color 0.3s;  
+    background-color: #1e1e1e;  
+    color: #d4d4d4;  
+}  
+  
+.header {  
+    display: flex;  
+    align-items: center;  
+    padding: 10px;  
+    text-align: left;  
+    background-color: #3c3c3c;  
+    color: #d4d4d4;  
+    font-size: 16px;  
+    border-bottom: 1px solid #555;  
+}  
+  
+.container {  
+    display: flex;  
+    flex: 1;  
+    overflow: hidden;  
+    height: calc(100vh - 50px);  
+}  
+  
+.settings {  
+    display: flex;  
+    flex-direction: column;  
+    padding: 20px;  
+    background-color: #3c3c3c;  
+    overflow-y: auto;  
+    min-width: 200px;  
+    max-width: 50%;  
+}  
+  
+.settings label {  
+    font-weight: bold;  
+    margin-top: 10px;  
+}  
+  
+.settings input, .settings textarea {  
+    width: calc(100% - 10px);  
+    padding: 5px;  
+    margin-top: 5px;  
+    margin-bottom: 10px;  
+    font-family: Arial, sans-serif;  
+    background-color: #2d2d2d;  
+    color: #d4d4d4;  
+    border: 1px solid #555;  
+    border-radius: 5px;  
+}  
+  
+.settings button, .settings select {  
+    padding: 10px 20px;  
+    font-size: 14px;  
+    cursor: pointer;  
+    font-family: Arial, sans-serif;  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border: 1px solid #007bff;  
+    border-radius: 5px;  
+    margin-top: 10px;  
+    transition: background-color 0.3s, border-color 0.3s;  
+}  
+  
+.settings button:hover, .settings select:hover {  
+    background-color: #0056b3;  
+    border-color: #0056b3;  
+}  
+  
+.chat-container {  
+    flex: 1;  
+    display: flex;  
+    flex-direction: column;  
+    padding: 20px;  
+    overflow-y: auto;  
+    background-color: #252526;  
+}  
+  
+.message {  
+    margin: 10px 0;  
+    padding: 10px;  
+    border-radius: 10px;  
+    max-width: 60%;  
+    font-size: 16px;  
+    line-height: 1.5;  
+    text-align: left; /* Ensure text is left-aligned */  
+}  
+  
+.message.user {  
+    align-self: flex-end;  
+    background-color: #007acc;  
+    color: #ffffff;  
+}  
+  
+.message.assistant {  
+    align-self: flex-start;  
+    background-color: #3c3c3c;  
+    color: #d4d4d4;  
+}  
+  
+.code-block {  
+    background-color: #2d2d2d;  
+    color: #d4d4d4;  
+    padding: 10px;  
+    border-radius: 5px;  
+    font-family: Consolas, 'Courier New', monospace;  
+    white-space: pre;  
+    position: relative;  
+}  
+  
+.copy-button {  
+    position: absolute;  
+    top: 10px;  
+    right: 10px;  
+    padding: 5px 10px;  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border: none;  
+    border-radius: 3px;  
+    cursor: pointer;  
+}  
+  
+.copy-button:hover {  
+    background-color: #0056b3;  
+}  
+  
+.input-container {  
+    display: flex;  
+    padding: 10px;  
+    background-color: #3c3c3c;  
+    border-top: 1px solid #555;  
+}  
+  
+.input-container textarea {  
+    flex: 1;  
+    padding: 10px;  
+    font-size: 16px;  
+    font-family: Arial, sans-serif;  
+    background-color: #2d2d2d;  
+    color: #d4d4d4;  
+    border: 1px solid #555;  
+    border-radius: 5px;  
+    margin-right: 10px;  
+    resize: none;  
+    max-height: 100px; /* Limit the number of displayed lines */  
+    overflow-y: auto; /* Show scrollbar when exceeding the limit */  
+}  
+  
+.input-container button {  
+    padding: 10px 20px;  
+    font-size: 14px;  
+    cursor: pointer;  
+    font-family: Arial, sans-serif;  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border: 1px solid #007bff;  
+    border-radius: 5px;  
+    transition: background-color 0.3s, border-color 0.3s;  
+    display: flex;  
+    align-items: center;  
+    justify-content: center;  
+}  
+  
+.input-container button svg {  
+    fill: #ffffff;  
+    width: 20px;  
+    height: 20px;  
+}  
+  
+.input-container button:hover {  
+    background-color: #0056b3;  
+    border-color: #0056b3;  
+}  
+  
+::-webkit-scrollbar {  
+    width: 12px;  
+}  
+  
+::-webkit-scrollbar-track {  
+    background: #2d2d2d;  
+}  
+  
+::-webkit-scrollbar-thumb {  
+    background-color: #007bff;  
+    border-radius: 6px;  
+    border: 3px solid #2d2d2d;  
+}  
+  
+.light-theme {  
+    background-color: #ffffff;  
+    color: #000000;  
+}  
+  
+.light-theme .header {  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border-bottom: 1px solid #ccc;  
+}  
+  
+.light-theme .input-container {  
+    background-color: #f1f1f1;  
+    border-top: 1px solid #ccc;  
+}  
+  
+.light-theme .input-container textarea {  
+    background-color: #ffffff;  
+    color: #000000;  
+}  
+  
+.light-theme .input-container button {  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border: 1px solid #007bff;  
+}  
+  
+.light-theme .input-container button:hover {  
+    background-color: #0056b3;  
+    border-color: #0056b3;  
+}  
+  
+.light-theme .settings {  
+    background-color: #f1f1f1;  
+    border-right: 1px solid #ccc;  
+}  
+  
+.light-theme .settings input, .light-theme .settings textarea {  
+    background-color: #ffffff;  
+    color: #000000;  
+    border: 1px solid #ccc;  
+}  
+  
+.light-theme .settings button, .light-theme .settings select {  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border: 1px solid #007bff;  
+}  
+  
+.light-theme .settings button:hover, .light-theme .settings select:hover {  
+    background-color: #0056b3;  
+    border-color: #0056b3;  
+}  
+  
+.light-theme .chat-container {  
+    background-color: #f9f9f9;  
+}  
+  
+.light-theme .message {  
+    background-color: #e0e0e0;  
+}  
+  
+.light-theme .message.user {  
+    background-color: #cfe9ff;  
+}  
+  
+.light-theme ::-webkit-scrollbar-track {  
+    background: #f1f1f1;  
+}  
+  
+.light-theme ::-webkit-scrollbar-thumb {  
+    background-color: #007bff;  
+    border-radius: 6px;  
+    border: 3px solid #f1f1f1;  
+}  
+  
+.resizer {  
+    width: 10px;  
+    background: #555;  
+    cursor: ew-resize;  
+    position: relative;  
+}  
+  
+.prompt-container {  
+    display: flex;  
+    flex-direction: column;  
+    justify-content: center; /* Vertically center */  
+    align-items: center; /* Horizontally center */  
+    padding: 20px;  
+    background-color: #1e1e1e;  
+    border: 1px solid #3c3c3c;  
+    border-radius: 10px;  
+}  
+  
+.prompt-title {  
+    font-size: 24px;  
+    margin-bottom: 20px;  
+}  
+  
+.prompt-buttons {  
+    display: flex;  
+    justify-content: space-evenly;  
+    width: 100%;  
+}  
+  
+.prompt-button {  
+    display: flex;  
+    flex-direction: column;  
+    align-items: center;  
+    justify-content: center;  
+    width: 200px;  
+    height: 100px;  
+    background-color: #3c3c3c;  
+    color: #d4d4d4;  
+    border: 1px solid #555;  
+    border-radius: 10px;  
+    cursor: pointer;  
+    transition: background-color 0.3s, border-color 0.3s;  
+}  
+  
+.prompt-button:hover {  
+    background-color: #2d2d2d;  
+    border-color: #007bff;  
+}  
+  
+.prompt-button span {  
+    margin-top: 10px;  
+    font-size: 12px;  
+    text-align: center;  
+}  
+  
+/* Tooltip styles */  
+.tooltip-container {  
+    position: relative;  
+    display: inline-block;  
+    cursor: pointer;  
+    margin-left: 5px;  
+}  
+  
+.tooltip-container .tooltip-icon {  
+    width: 16px;  
+    height: 16px;  
+    background-color: #007bff;  
+    color: #fff;  
+    text-align: center;  
+    border-radius: 50%;  
+    display: inline-flex;  
+    align-items: center;  
+    justify-content: center;  
+    font-size: 12px;  
+}  
+  
+.tooltip-container .tooltip-text {  
+    visibility: hidden;  
+    width: 200px;  
+    background-color: #555;  
+    color: #fff;  
+    text-align: center;  
+    border-radius: 5px;  
+    padding: 5px;  
+    position: absolute;  
+    z-index: 10; /* Ensure tooltip is on top */  
+    bottom: 125%; /* Show above container */  
+    left: 50%;  
+    transform: translateX(-50%); /* Center using transform */  
+    opacity: 0;  
+    transition: opacity 0.3s;  
+    white-space: normal; /* Ensure text wraps */  
+}  
+  
+.tooltip-container:hover .tooltip-text {  
+    visibility: visible;  
+    opacity: 1;  
+}  
+  
+.tooltip-container .tooltip-text::after {  
+    content: "";  
+    position: absolute;  
+    top: 100%; /* Show arrow at bottom of tooltip */  
+    left: 50%;  
+    transform: translateX(-50%);  
+    border-width: 5px;  
+    border-style: solid;  
+    border-color: #555 transparent transparent transparent;  
+}  
