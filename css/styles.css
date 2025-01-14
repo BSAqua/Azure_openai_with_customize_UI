@@ -84,20 +84,21 @@ body {
     flex: 1;  
     display: flex;  
     flex-direction: column;  
-    padding: 20px;  
+    padding: 10px;  
     overflow-y: auto;  
     background-color: #252526;  
 }  
   
 .message {  
-    margin: 10px 0;  
-    padding: 10px;  
+    margin: 5px 0; /* Reduced margin */  
+    padding: 8px 12px; /* Reduced padding */  
     border-radius: 10px;  
     max-width: 60%;  
     font-size: 16px;  
     line-height: 1.5;  
     text-align: left;  
-    white-space: pre-wrap; /* Preserve original line breaks and indentation */  
+    white-space: pre-wrap; /* 保留原本的換行和縮排 */  
+    word-wrap: break-word; /* Allow long words to break and wrap to the next line */  
 }  
   
 .message.user {  
@@ -334,7 +335,7 @@ body {
     text-align: center;  
 }  
   
-/* Tooltip styles */  
+/* 提示框樣式 */  
 .tooltip-container {  
     position: relative;  
     display: inline-block;  
