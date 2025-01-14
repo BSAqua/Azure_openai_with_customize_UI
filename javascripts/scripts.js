@@ -1,19 +1,22 @@
-let darkTheme = true;  
-let messages = [];  
-let generating = false;  
-let cachedResults = []; // 緩存搜索結果  
+let darkTheme = true; // Boolean to track the current theme  
+let messages = []; // Array to store chat messages  
+let generating = false; // Boolean to track if a response is being generated  
+let cachedResults = []; // Array to cache search results  
+  
+// Initialize Markdown-it with options  
 const md = window.markdownit({  
-    html: true, // 启用 HTML 标签  
-    breaks: true, // 将换行符转换为 <br>  
-    linkify: true // 自动识别链接  
+    html: true, // Enable HTML tags  
+    breaks: true, // Convert line breaks to <br>  
+    linkify: true // Auto-detect links  
 });  
   
+// Event listener for when the DOM is fully loaded  
 document.addEventListener('DOMContentLoaded', function() {  
-    checkMode();  
-    checkInputRange('max-tokens', 1, 4096);  
-    checkInputRange('top-p', 0.0, 1.0);  
-    checkInputRange('temperature', 0.0, 1.0);  
-    checkInputRange('message-count', 1, 20);  
+    checkMode(); // Check the selected mode  
+    checkInputRange('max-tokens', 1, 4096); // Check range for max tokens input  
+    checkInputRange('top-p', 0.0, 1.0); // Check range for top-p input  
+    checkInputRange('temperature', 0.0, 1.0); // Check range for temperature input  
+    checkInputRange('message-count', 1, 20); // Check range for message count input  
   
     // Initialize textarea height  
     adjustTextareaHeight();  
@@ -144,7 +147,7 @@ function addMessage(role, content) {
   
     // Convert Markdown to HTML  
     const htmlContent = md.render(content);  
-    console.log('Generated HTML:', htmlContent); // 打印生成的 HTML 内容  
+    console.log('Generated HTML:', htmlContent); // Log generated HTML content  
   
     // Check if message contains code block  
     if (content.includes('```')) {  
@@ -235,8 +238,8 @@ function uploadFile() {
         console.error('Error:', error);  
         alert(`Error: ${error.message}`);  
     });  
-} 
-
+}  
+  
 // Function to resize the settings panel  
 const settings = document.getElementById('settings');  
 const resizer = document.getElementById('resizer');  
