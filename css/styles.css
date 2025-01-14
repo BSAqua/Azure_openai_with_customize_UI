@@ -97,7 +97,7 @@ body {
     font-size: 16px;  
     line-height: 1.5;  
     text-align: left;  
-    white-space: pre-wrap; /* 保留原本的換行和縮排 */  
+    white-space: pre-wrap; /* Preserve original line breaks and indentation */  
 }  
   
 .message.user {  
@@ -334,7 +334,7 @@ body {
     text-align: center;  
 }  
   
-/* 提示框樣式 */  
+/* Tooltip styles */  
 .tooltip-container {  
     position: relative;  
     display: inline-block;  
