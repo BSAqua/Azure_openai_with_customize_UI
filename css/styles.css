@@ -6,8 +6,8 @@ body {
     flex-direction: column;  
     height: 100vh;  
     transition: background-color 0.3s, color 0.3s;  
-    background-color: #1e1e1e;  
-    color: #d4d4d4;  
+    background-color: #1e1e1e; /* Dark theme background color */  
+    color: #d4d4d4; /* Dark theme text color */  
 }  
   
 .header {  
@@ -15,22 +15,22 @@ body {
     align-items: center;  
     padding: 10px;  
     text-align: left;  
-    background-color: #3c3c3c;  
-    color: #d4d4d4;  
+    background-color: #3c3c3c; /* Header background color */  
+    color: #d4d4d4; /* Header text color */  
     font-size: 16px;  
-    border-bottom: 1px solid #555;  
+    border-bottom: 1px solid #555; /* Header bottom border */  
 }  
   
 .container {  
     display: flex;  
-    height: calc(100vh - 50px);  
+    height: calc(100vh - 50px); /* Full height minus header height */  
 }  
   
 .settings {  
     display: flex;  
     flex-direction: column;  
     padding: 20px;  
-    background-color: #3c3c3c;  
+    background-color: #3c3c3c; /* Settings panel background color */  
     overflow-y: auto;  
     min-width: 200px;  
     max-width: 50%;  
@@ -42,34 +42,37 @@ body {
     margin-top: 10px;  
 }  
   
-.settings input, .settings textarea {  
-    width: calc(100% - 10px);  
+.settings input,  
+.settings textarea {  
+    width: calc(100% - 10px); /* Full width minus padding */  
     padding: 5px;  
     margin-top: 5px;  
     margin-bottom: 10px;  
     font-family: Arial, sans-serif;  
-    background-color: #2d2d2d;  
-    color: #d4d4d4;  
-    border: 1px solid #555;  
+    background-color: #2d2d2d; /* Input background color */  
+    color: #d4d4d4; /* Input text color */  
+    border: 1px solid #555; /* Input border color */  
     border-radius: 5px;  
 }  
   
-.settings button, .settings select {  
+.settings button,  
+.settings select {  
     padding: 10px 20px;  
     font-size: 14px;  
     cursor: pointer;  
     font-family: Arial, sans-serif;  
-    background-color: #007bff;  
-    color: #ffffff;  
-    border: 1px solid #007bff;  
+    background-color: #007bff; /* Button background color */  
+    color: #ffffff; /* Button text color */  
+    border: 1px solid #007bff; /* Button border color */  
     border-radius: 5px;  
     margin-top: 10px;  
     transition: background-color 0.3s, border-color 0.3s;  
 }  
   
-.settings button:hover, .settings select:hover {  
-    background-color: #0056b3;  
-    border-color: #0056b3;  
+.settings button:hover,  
+.settings select:hover {  
+    background-color: #0056b3; /* Button background color on hover */  
+    border-color: #0056b3; /* Button border color on hover */  
 }  
   
 .chat-section {  
@@ -77,7 +80,7 @@ body {
     flex-direction: column;  
     flex: 1;  
     overflow: hidden;  
-    background-color: #252526;  
+    background-color: #252526; /* Chat section background color */  
 }  
   
 .chat-container {  
@@ -86,7 +89,7 @@ body {
     flex-direction: column;  
     padding: 10px;  
     overflow-y: auto;  
-    background-color: #252526;  
+    background-color: #252526; /* Chat container background color */  
 }  
   
 .message {  
@@ -97,29 +100,29 @@ body {
     font-size: 16px;  
     line-height: 1.5;  
     text-align: left;  
-    white-space: pre-wrap; /* 保留原本的換行和縮排 */  
+    white-space: pre-wrap; /* Preserve line breaks and indentation */  
     word-wrap: break-word; /* Allow long words to break and wrap to the next line */  
 }  
   
 .message.user {  
     align-self: flex-end;  
-    background-color: #007acc;  
-    color: #ffffff;  
+    background-color: #007acc; /* User message background color */  
+    color: #ffffff; /* User message text color */  
 }  
   
 .message.assistant {  
     align-self: flex-start;  
-    background-color: #3c3c3c;  
-    color: #d4d4d4;  
+    background-color: #3c3c3c; /* Assistant message background color */  
+    color: #d4d4d4; /* Assistant message text color */  
 }  
   
 .code-block {  
-    background-color: #2d2d2d;  
-    color: #d4d4d4;  
+    background-color: #2d2d2d; /* Code block background color */  
+    color: #d4d4d4; /* Code block text color */  
     padding: 10px;  
     border-radius: 5px;  
     font-family: Consolas, 'Courier New', monospace;  
-    white-space: pre;  
+    white-space: pre; /* Preserve whitespace */  
     position: relative;  
 }  
   
@@ -128,22 +131,22 @@ body {
     top: 10px;  
     right: 10px;  
     padding: 5px 10px;  
-    background-color: #007bff;  
-    color: #ffffff;  
+    background-color: #007bff; /* Copy button background color */  
+    color: #ffffff; /* Copy button text color */  
     border: none;  
     border-radius: 3px;  
     cursor: pointer;  
 }  
   
 .copy-button:hover {  
-    background-color: #0056b3;  
+    background-color: #0056b3; /* Copy button background color on hover */  
 }  
   
 .input-container {  
     display: flex;  
     padding: 10px;  
-    background-color: #3c3c3c;  
-    border-top: 1px solid #555;  
+    background-color: #3c3c3c; /* Input container background color */  
+    border-top: 1px solid #555; /* Input container top border */  
     width: 100%;  
     box-sizing: border-box;  
 }  
@@ -153,9 +156,9 @@ body {
     padding: 10px;  
     font-size: 16px;  
     font-family: Arial, sans-serif;  
-    background-color: #2d2d2d;  
-    color: #d4d4d4;  
-    border: 1px solid #555;  
+    background-color: #2d2d2d; /* Textarea background color */  
+    color: #d4d4d4; /* Textarea text color */  
+    border: 1px solid #555; /* Textarea border color */  
     border-radius: 5px;  
     margin-right: 10px;  
     resize: none;  
@@ -168,9 +171,9 @@ body {
     font-size: 14px;  
     cursor: pointer;  
     font-family: Arial, sans-serif;  
-    background-color: #007bff;  
-    color: #ffffff;  
-    border: 1px solid #007bff;  
+    background-color: #007bff; /* Button background color */  
+    color: #ffffff; /* Button text color */  
+    border: 1px solid #007bff; /* Button border color */  
     border-radius: 5px;  
     transition: background-color 0.3s, border-color 0.3s;  
     display: flex;  
@@ -179,14 +182,14 @@ body {
 }  
   
 .input-container button svg {  
-    fill: #ffffff;  
+    fill: #ffffff; /* SVG icon fill color */  
     width: 20px;  
     height: 20px;  
 }  
   
 .input-container button:hover {  
-    background-color: #0056b3;  
-    border-color: #0056b3;  
+    background-color: #0056b3; /* Button background color on hover */  
+    border-color: #0056b3; /* Button border color on hover */  
 }  
   
 ::-webkit-scrollbar {  
@@ -194,95 +197,98 @@ body {
 }  
   
 ::-webkit-scrollbar-track {  
-    background: #2d2d2d;  
+    background: #2d2d2d; /* Scrollbar track color */  
 }  
   
 ::-webkit-scrollbar-thumb {  
-    background-color: #007bff;  
+    background-color: #007bff; /* Scrollbar thumb color */  
     border-radius: 6px;  
-    border: 3px solid #2d2d2d;  
+    border: 3px solid #2d2d2d; /* Scrollbar thumb border */  
 }  
   
 .light-theme {  
-    background-color: #ffffff;  
-    color: #000000;  
+    background-color: #ffffff; /* Light theme background color */  
+    color: #000000; /* Light theme text color */  
 }  
   
 .light-theme .header {  
-    background-color: #007bff;  
-    color: #ffffff;  
-    border-bottom: 1px solid #ccc;  
+    background-color: #007bff; /* Light theme header background color */  
+    color: #ffffff; /* Light theme header text color */  
+    border-bottom: 1px solid #ccc; /* Light theme header bottom border */  
 }  
   
 .light-theme .input-container {  
-    background-color: #f1f1f1;  
-    border-top: 1px solid #ccc;  
+    background-color: #f1f1f1; /* Light theme input container background color */  
+    border-top: 1px solid #ccc; /* Light theme input container top border */  
 }  
   
 .light-theme .input-container textarea {  
-    background-color: #ffffff;  
-    color: #000000;  
+    background-color: #ffffff; /* Light theme textarea background color */  
+    color: #000000; /* Light theme textarea text color */  
 }  
   
 .light-theme .input-container button {  
-    background-color: #007bff;  
-    color: #ffffff;  
-    border: 1px solid #007bff;  
+    background-color: #007bff; /* Light theme button background color */  
+    color: #ffffff; /* Light theme button text color */  
+    border: 1px solid #007bff; /* Light theme button border color */  
 }  
   
 .light-theme .input-container button:hover {  
-    background-color: #0056b3;  
-    border-color: #0056b3;  
+    background-color: #0056b3; /* Light theme button background color on hover */  
+    border-color: #0056b3; /* Light theme button border color on hover */  
 }  
   
 .light-theme .settings {  
-    background-color: #f1f1f1;  
-    border-right: 1px solid #ccc;  
+    background-color: #f1f1f1; /* Light theme settings background color */  
+    border-right: 1px solid #ccc; /* Light theme settings right border */  
 }  
   
-.light-theme .settings input, .light-theme .settings textarea {  
-    background-color: #ffffff;  
-    color: #000000;  
-    border: 1px solid #ccc;  
+.light-theme .settings input,  
+.light-theme .settings textarea {  
+    background-color: #ffffff; /* Light theme input background color */  
+    color: #000000; /* Light theme input text color */  
+    border: 1px solid #ccc; /* Light theme input border color */  
 }  
   
-.light-theme .settings button, .light-theme .settings select {  
-    background-color: #007bff;  
-    color: #ffffff;  
-    border: 1px solid #007bff;  
+.light-theme .settings button,  
+.light-theme .settings select {  
+    background-color: #007bff; /* Light theme button background color */  
+    color: #ffffff; /* Light theme button text color */  
+    border: 1px solid #007bff; /* Light theme button border color */  
 }  
   
-.light-theme .settings button:hover, .light-theme .settings select:hover {  
-    background-color: #0056b3;  
-    border-color: #0056b3;  
+.light-theme .settings button:hover,  
+.light-theme .settings select:hover {  
+    background-color: #0056b3; /* Light theme button background color on hover */  
+    border-color: #0056b3; /* Light theme button border color on hover */  
 }  
   
 .light-theme .chat-container {  
-    background-color: #f9f9f9;  
+    background-color: #f9f9f9; /* Light theme chat container background color */  
 }  
   
 .light-theme .message {  
-    background-color: #e0e0e0;  
+    background-color: #e0e0e0; /* Light theme message background color */  
 }  
   
 .light-theme .message.user {  
-    background-color: #cfe9ff;  
+    background-color: #cfe9ff; /* Light theme user message background color */  
 }  
   
 .light-theme ::-webkit-scrollbar-track {  
-    background: #f1f1f1;  
+    background: #f1f1f1; /* Light theme scrollbar track color */  
 }  
   
 .light-theme ::-webkit-scrollbar-thumb {  
-    background-color: #007bff;  
+    background-color: #007bff; /* Light theme scrollbar thumb color */  
     border-radius: 6px;  
-    border: 3px solid #f1f1f1;  
+    border: 3px solid #f1f1f1; /* Light theme scrollbar thumb border */  
 }  
   
 .resizer {  
     width: 10px;  
-    background: #555;  
-    cursor: ew-resize;  
+    background: #555; /* Resizer background color */  
+    cursor: ew-resize; /* Resizer cursor type */  
     position: relative;  
 }  
   
@@ -292,8 +298,8 @@ body {
     justify-content: center;  
     align-items: center;  
     padding: 20px;  
-    background-color: #1e1e1e;  
-    border: 1px solid #3c3c3c;  
+    background-color: #1e1e1e; /* Prompt container background color */  
+    border: 1px solid #3c3c3c; /* Prompt container border color */  
     border-radius: 10px;  
     width: 100%;  
 }  
@@ -316,17 +322,17 @@ body {
     justify-content: center;  
     width: 200px;  
     height: 100px;  
-    background-color: #3c3c3c;  
-    color: #d4d4d4;  
-    border: 1px solid #555;  
+    background-color: #3c3c3c; /* Prompt button background color */  
+    color: #d4d4d4; /* Prompt button text color */  
+    border: 1px solid #555; /* Prompt button border color */  
     border-radius: 10px;  
     cursor: pointer;  
     transition: background-color 0.3s, border-color 0.3s;  
 }  
   
 .prompt-button:hover {  
-    background-color: #2d2d2d;  
-    border-color: #007bff;  
+    background-color: #2d2d2d; /* Prompt button background color on hover */  
+    border-color: #007bff; /* Prompt button border color on hover */  
 }  
   
 .prompt-button span {  
@@ -335,7 +341,7 @@ body {
     text-align: center;  
 }  
   
-/* 提示框樣式 */  
+/* Tooltip styles */  
 .tooltip-container {  
     position: relative;  
     display: inline-block;  
@@ -346,8 +352,8 @@ body {
 .tooltip-container .tooltip-icon {  
     width: 16px;  
     height: 16px;  
-    background-color: #007bff;  
-    color: #fff;  
+    background-color: #007bff; /* Tooltip icon background color */  
+    color: #fff; /* Tooltip icon text color */  
     text-align: center;  
     border-radius: 50%;  
     display: inline-flex;  
@@ -359,8 +365,8 @@ body {
 .tooltip-container .tooltip-text {  
     visibility: hidden;  
     width: 200px;  
-    background-color: #555;  
-    color: #fff;  
+    background-color: #555; /* Tooltip background color */  
+    color: #fff; /* Tooltip text color */  
     text-align: center;  
     border-radius: 5px;  
     padding: 5px;  
@@ -387,5 +393,5 @@ body {
     transform: translateX(-50%);  
     border-width: 5px;  
     border-style: solid;  
-    border-color: #555 transparent transparent transparent;  
+    border-color: #555 transparent transparent transparent; /* Tooltip arrow color */  
 }  
