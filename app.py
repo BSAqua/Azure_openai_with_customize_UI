@@ -82,10 +82,15 @@ def search():
 def upload():  
     try:  
         file = request.files['file']  
+        overwrite = request.form.get('overwrite') == 'true'  # Get the overwrite option  
         blob_client = blob_service_client.get_blob_client(container=container_name, blob=file.filename)  
-        blob_client.upload_blob(file)  
+          
+        if not overwrite and blob_client.exists():  
+            return jsonify({"message": "文件已存在，未選擇覆蓋!"}), 400  
   
-        # Trigger the indexer to run  
+        blob_client.upload_blob(file, overwrite=overwrite)  
+  
+        # Trigger indexer run  
         indexer_url = f"{search_service_endpoint}/indexers/{indexer_name}/run?api-version=2020-06-30"  
         indexer_response = requests.post(indexer_url, headers={  
             'Content-Type': 'application/json',  
@@ -98,7 +103,7 @@ def upload():
             return jsonify({"message": "文件上傳成功，但觸發索引器失敗!", "error": indexer_response.text}), 500  
     except Exception as e:  
         logger.error("在 /upload 中的錯誤: %s", str(e))  
-        return jsonify({"error": str(e)}), 500  
+        return jsonify({"error": str(e)}), 500   
   
 @app.route('/ask', methods=['POST'])  
 def ask():  
