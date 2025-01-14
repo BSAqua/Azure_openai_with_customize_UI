@@ -1,8 +1,8 @@
-#ChatGPTUI
+# ChatGPTUI
  
 ChatGPTUI is a web-based chat application that integrates with OpenAI's GPT models. This application allows users to interact with an AI assistant, upload documents, and receive context-aware responses based on the uploaded content.
 
-##Features
+## Features
  
 
 Chat Interface: Users can interact with the AI assistant through a user-friendly chat interface.
@@ -12,7 +12,7 @@ Customizable Settings: Adjust settings like max tokens, top P, temperature, and 
 Code Block Handling: Display code blocks with syntax highlighting and a copy button.
 Multi-line Input: The input area supports multi-line input and auto-resizes based on content.
 Predefined Prompts: Use predefined prompts for quick queries.
-##Installation
+## Installation
  
 
 1. Clone the repository:
@@ -47,7 +47,7 @@ python app.py
  
 6. Open your browser and go to http://127.0.0.1:5000 to access the application.
 
-##Usage
+## Usage
  
 
 Chat with the AI Assistant: Type your message in the input area and press Enter or click the send button. The assistant will respond based on the context provided.
@@ -90,11 +90,11 @@ License
  
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-##Contributing
+## Contributing
  
 Contributions are welcome! Please fork this repository and submit a pull request for any enhancements or bug fixes.
 
-##Acknowledgements
+## Acknowledgements
  
 
 OpenAI for providing the GPT models.
