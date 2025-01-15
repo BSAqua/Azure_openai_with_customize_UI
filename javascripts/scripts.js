@@ -1,14 +1,16 @@
 let darkTheme = true;  
 let messages = [];  
 let generating = false;  
-let cachedResults = []; // 緩存搜索結果 
+let cachedResults = []; // cache search results 
 let modelInstructionsAdded = false; // Variable to track if model instructions have been added   
+// Initialize markdown-it  
 const md = window.markdownit({  
-    html: true, // 启用 HTML 标签  
-    breaks: true, // 将换行符转换为 <br>  
-    linkify: true // 自动识别链接  
+    html: true, // Enable HTML tags  
+    breaks: true, // Convert line breaks to <br>  
+    linkify: true // Automatically detect links  
 });  
   
+// DOMContentLoaded event  
 document.addEventListener('DOMContentLoaded', function() {  
     checkMode();  
     checkInputRange('max-tokens', 1, 4096);  
@@ -18,9 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
     // Initialize textarea height  
     adjustTextareaHeight();  
-    document.getElementById('user-input').addEventListener('input', adjustTextareaHeight); // Bind input event  
+    document.getElementById('user-input').addEventListener('input', adjustTextareaHeight);  
   
-    // Bind keydown event to send message on Enter key press  
+    // Bind Enter key to send message event  
     document.getElementById('user-input').addEventListener('keydown', function(event) {  
         if (event.key === 'Enter' && !event.shiftKey) {  
             event.preventDefault();  
@@ -65,6 +67,7 @@ function usePrompt(prompt) {
     sendMessage();  
 }  
   
+// Send message  
 function sendMessage() {  
     const userInput = document.getElementById('user-input').value.trim();  
     const modelInstructions = document.getElementById('model-instructions').value.trim();  
@@ -149,7 +152,7 @@ function sendMessage() {
     adjustTextareaHeight();  
 }  
   
-
+// Add message to chat container  
 function addMessage(role, content) {  
     const chatContainer = document.getElementById('chat-container');  
     const messageDiv = document.createElement('div');  
@@ -173,6 +176,7 @@ function addMessage(role, content) {
                 codeBlock.classList.add('code-block');  
                 const pre = document.createElement('pre');  
                 pre.textContent = part.trim(); // Remove any leading/trailing whitespace  
+  
                 codeBlock.appendChild(pre);  
   
                 // Add copy button for the assistant role  
@@ -203,9 +207,23 @@ function addMessage(role, content) {
     messageDiv.appendChild(markdownContainer);  
     chatContainer.appendChild(messageDiv);  
     chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom  
+  
+    // Adjust text color based on background color  
+    adjustTextColorBasedOnBackground(messageDiv);  
 }  
   
-
+// Adjust text color based on background color  
+function adjustTextColorBasedOnBackground(element) {  
+    const bgColor = window.getComputedStyle(element).backgroundColor;  
+    const rgb = bgColor.match(/\d+/g).map(Number);  
+    const brightness = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000;  
+  
+    if (brightness > 125) {  
+        element.style.color = '#000000'; // Dark text for light background  
+    } else {  
+        element.style.color = '#FFFFFF'; // Light text for dark background  
+    }  
+}  
   
 // Toggle theme  
 function toggleTheme() {  
@@ -259,9 +277,9 @@ function uploadFile() {
         console.error('Error:', error);  
         alert(`Error: ${error.message}`);  
     });  
-} 
-
-// Function to resize the settings panel  
+}  
+  
+// Resize settings panel  
 const settings = document.getElementById('settings');  
 const resizer = document.getElementById('resizer');  
 const container = document.querySelector('.container');  
