@@ -210,7 +210,7 @@ function addMessage(role, content) {
   
     // Adjust text color based on background color  
     adjustTextColorBasedOnBackground(messageDiv);  
-}  
+}     
   
 // Adjust text color based on background color  
 function adjustTextColorBasedOnBackground(element) {  
