@@ -98,35 +98,28 @@ body {
     overflow-wrap: break-word; /* Ensure long words break and wrap to the next line */  
 }  
   
-  
 .message {  
-    margin-bottom: 10px; /* Reduced margin */  
-    padding: 8px 12px; /* Reduced padding */  
-    border-radius: 10px;  
-    max-width: 60%;  
-    font-size: 16px;  
-    line-height: 1.5;  
-    text-align: left;  
-    white-space: pre; /* Preserve original line breaks and indentation */  
-    word-wrap: break-word; /* Allow long words to break and wrap to the next line */  
-    overflow-wrap: break-word; /* Ensure long words break and wrap to the next line */
+    display: flex;  
+    align-items: center; /* Vertically center the content */  
+    margin-bottom: 10px; /* Space between messages */  
+    max-width: 60%; /* Ensure messages do not exceed 60% of container width */  
+    word-wrap: break-word; /* Ensure long words break and wrap to the next line */  
+    overflow-wrap: break-word; /* Ensure long words break and wrap to the next line */  
+    padding: 10px; /* Padding for inner spacing */  
+    border-radius: 5px; /* Rounded corners */  
 }  
   
 .message.user {  
-    align-self: flex-end;  
-    background-color: #007acc;  
+    background-color: #007acc; /* Light blue background for user messages */  
     color: #ffffff;  
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px; /* Padding for inner spacing */ 
+    align-self: flex-end; /* Align user messages to the right */  
 }  
   
 .message.assistant {  
     background-color: #3c3c3c; /* Light green background for assistant messages */  
     color: #d4d4d4;  
-    padding: 10px; /* Padding for inner spacing */  
-    border-radius: 5px; /* Rounded corners */  
     align-self: flex-start; /* Align assistant messages to the left */  
-}   
+}  
   
 .code-block {  
     background-color: #2d2d2d;  
@@ -136,7 +129,7 @@ body {
     font-family: Consolas, 'Courier New', monospace;  
     white-space: pre; /* Preserve whitespace formatting */  
     position: relative;  
-}   
+}  
   
 .copy-button {  
     position: absolute;  
@@ -153,7 +146,8 @@ body {
 .copy-button:hover {  
     background-color: #0056b3;  
 }  
-
+  
+/* Preserve original line breaks and indentation */  
 .message {  
     white-space: pre-wrap; /* Preserve original line breaks and indentation */  
     word-wrap: break-word; /* Ensure long words break and wrap to the next line */  
