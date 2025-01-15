@@ -89,15 +89,7 @@ body {
     background-color: #252526;  
 }  
 
-.markdown-content {  
-    background-color: #f8f8f8; /* Light grey background */  
-    padding: 10px; /* Padding for inner spacing */  
-    border-radius: 5px; /* Rounded corners */  
-    margin-bottom: 10px; /* Space between messages */  
-    word-wrap: break-word; /* Ensure long words break and wrap to the next line */  
-    overflow-wrap: break-word; /* Ensure long words break and wrap to the next line */  
-}  
-  
+/* Default styles for message */  
 .message {  
     display: flex;  
     align-items: center; /* Vertically center the content */  
@@ -107,8 +99,34 @@ body {
     overflow-wrap: break-word; /* Ensure long words break and wrap to the next line */  
     padding: 10px; /* Padding for inner spacing */  
     border-radius: 5px; /* Rounded corners */  
+    flex-direction: column; /* Ensure child elements stack vertically */  
 }  
   
+/* Default styles for markdown content */  
+.markdown-content {  
+    width: 100%; /* Fill the width of the parent message element */  
+    background-color: #f8f8f8; /* Light grey background */  
+    padding: 10px; /* Padding for inner spacing */  
+    border-radius: 5px; /* Rounded corners */  
+    margin-bottom: 10px; /* Space between messages */  
+    word-wrap: break-word; /* Ensure long words break and wrap to the next line */  
+    overflow-wrap: break-word; /* Ensure long words break and wrap to the next line */  
+    box-sizing: border-box; /* Include padding in the element's width and height */  
+}  
+  
+/* Dark theme styles */  
+body.dark-theme .markdown-content {  
+    background-color: #2d2d2d; /* Dark grey background */  
+    color: #d4d4d4; /* Light text color */  
+}  
+  
+/* Light theme styles */  
+body.light-theme .markdown-content {  
+    background-color: #ffffff; /* White background */  
+    color: #000000; /* Dark text color */  
+}
+
+/* Ensure the message for user and assistant roles have distinct styles */  
 .message.user {  
     background-color: #007acc; /* Light blue background for user messages */  
     color: #ffffff;  
@@ -121,6 +139,7 @@ body {
     align-self: flex-start; /* Align assistant messages to the left */  
 }  
   
+/* Code block styles */  
 .code-block {  
     background-color: #2d2d2d;  
     color: #d4d4d4;  
@@ -131,6 +150,7 @@ body {
     position: relative;  
 }  
   
+/* Copy button styles */  
 .copy-button {  
     position: absolute;  
     top: 10px;  
@@ -147,7 +167,7 @@ body {
     background-color: #0056b3;  
 }  
   
-/* Preserve original line breaks and indentation */  
+/* General message styles to preserve line breaks and indentation */  
 .message {  
     white-space: pre-wrap; /* Preserve original line breaks and indentation */  
     word-wrap: break-word; /* Ensure long words break and wrap to the next line */  
