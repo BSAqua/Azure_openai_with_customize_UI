@@ -6,8 +6,8 @@ body {
     flex-direction: column;  
     height: 100vh;  
     transition: background-color 0.3s, color 0.3s;  
-    background-color: #1e1e1e; /* Dark theme background color */  
-    color: #d4d4d4; /* Dark theme text color */  
+    background-color: #1e1e1e;  
+    color: #d4d4d4;  
 }  
   
 .header {  
@@ -15,22 +15,22 @@ body {
     align-items: center;  
     padding: 10px;  
     text-align: left;  
-    background-color: #3c3c3c; /* Header background color */  
-    color: #d4d4d4; /* Header text color */  
+    background-color: #3c3c3c;  
+    color: #d4d4d4;  
     font-size: 16px;  
-    border-bottom: 1px solid #555; /* Header bottom border */  
+    border-bottom: 1px solid #555;  
 }  
   
 .container {  
     display: flex;  
-    height: calc(100vh - 50px); /* Full height minus header height */  
+    height: calc(100vh - 50px);  
 }  
   
 .settings {  
     display: flex;  
     flex-direction: column;  
     padding: 20px;  
-    background-color: #3c3c3c; /* Settings panel background color */  
+    background-color: #3c3c3c;  
     overflow-y: auto;  
     min-width: 200px;  
     max-width: 50%;  
@@ -42,37 +42,34 @@ body {
     margin-top: 10px;  
 }  
   
-.settings input,  
-.settings textarea {  
-    width: calc(100% - 10px); /* Full width minus padding */  
+.settings input, .settings textarea {  
+    width: calc(100% - 10px);  
     padding: 5px;  
     margin-top: 5px;  
     margin-bottom: 10px;  
     font-family: Arial, sans-serif;  
-    background-color: #2d2d2d; /* Input background color */  
-    color: #d4d4d4; /* Input text color */  
-    border: 1px solid #555; /* Input border color */  
+    background-color: #2d2d2d;  
+    color: #d4d4d4;  
+    border: 1px solid #555;  
     border-radius: 5px;  
 }  
   
-.settings button,  
-.settings select {  
+.settings button, .settings select {  
     padding: 10px 20px;  
     font-size: 14px;  
     cursor: pointer;  
     font-family: Arial, sans-serif;  
-    background-color: #007bff; /* Button background color */  
-    color: #ffffff; /* Button text color */  
-    border: 1px solid #007bff; /* Button border color */  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border: 1px solid #007bff;  
     border-radius: 5px;  
     margin-top: 10px;  
     transition: background-color 0.3s, border-color 0.3s;  
 }  
   
-.settings button:hover,  
-.settings select:hover {  
-    background-color: #0056b3; /* Button background color on hover */  
-    border-color: #0056b3; /* Button border color on hover */  
+.settings button:hover, .settings select:hover {  
+    background-color: #0056b3;  
+    border-color: #0056b3;  
 }  
   
 .chat-section {  
@@ -80,7 +77,7 @@ body {
     flex-direction: column;  
     flex: 1;  
     overflow: hidden;  
-    background-color: #252526; /* Chat section background color */  
+    background-color: #252526;  
 }  
   
 .chat-container {  
@@ -89,64 +86,84 @@ body {
     flex-direction: column;  
     padding: 10px;  
     overflow-y: auto;  
-    background-color: #252526; /* Chat container background color */  
+    background-color: #252526;  
+}  
+
+.markdown-content {  
+    background-color: #f8f8f8; /* Light grey background */  
+    padding: 10px; /* Padding for inner spacing */  
+    border-radius: 5px; /* Rounded corners */  
+    margin-bottom: 10px; /* Space between messages */  
+    word-wrap: break-word; /* Ensure long words break and wrap to the next line */  
+    overflow-wrap: break-word; /* Ensure long words break and wrap to the next line */  
 }  
   
+  
 .message {  
-    margin: 5px 0; /* Reduced margin */  
+    margin-bottom: 10px; /* Reduced margin */  
     padding: 8px 12px; /* Reduced padding */  
     border-radius: 10px;  
     max-width: 60%;  
     font-size: 16px;  
     line-height: 1.5;  
     text-align: left;  
-    white-space: pre-wrap; /* Preserve line breaks and indentation */  
+    white-space: pre; /* Preserve original line breaks and indentation */  
     word-wrap: break-word; /* Allow long words to break and wrap to the next line */  
+    overflow-wrap: break-word; /* Ensure long words break and wrap to the next line */
 }  
   
 .message.user {  
     align-self: flex-end;  
-    background-color: #007acc; /* User message background color */  
-    color: #ffffff; /* User message text color */  
+    background-color: #007acc;  
+    color: #ffffff;  
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px; /* Padding for inner spacing */ 
 }  
   
 .message.assistant {  
-    align-self: flex-start;  
-    background-color: #3c3c3c; /* Assistant message background color */  
-    color: #d4d4d4; /* Assistant message text color */  
-}  
+    background-color: #3c3c3c; /* Light green background for assistant messages */  
+    color: #d4d4d4;  
+    padding: 10px; /* Padding for inner spacing */  
+    border-radius: 5px; /* Rounded corners */  
+    align-self: flex-start; /* Align assistant messages to the left */  
+}   
   
 .code-block {  
-    background-color: #2d2d2d; /* Code block background color */  
-    color: #d4d4d4; /* Code block text color */  
+    background-color: #2d2d2d;  
+    color: #d4d4d4;  
     padding: 10px;  
     border-radius: 5px;  
     font-family: Consolas, 'Courier New', monospace;  
-    white-space: pre; /* Preserve whitespace */  
+    white-space: pre; /* Preserve whitespace formatting */  
     position: relative;  
-}  
+}   
   
 .copy-button {  
     position: absolute;  
     top: 10px;  
     right: 10px;  
     padding: 5px 10px;  
-    background-color: #007bff; /* Copy button background color */  
-    color: #ffffff; /* Copy button text color */  
+    background-color: #007bff;  
+    color: #ffffff;  
     border: none;  
     border-radius: 3px;  
     cursor: pointer;  
 }  
   
 .copy-button:hover {  
-    background-color: #0056b3; /* Copy button background color on hover */  
+    background-color: #0056b3;  
+}  
+
+.message {  
+    white-space: pre-wrap; /* Preserve original line breaks and indentation */  
+    word-wrap: break-word; /* Ensure long words break and wrap to the next line */  
 }  
   
 .input-container {  
     display: flex;  
     padding: 10px;  
-    background-color: #3c3c3c; /* Input container background color */  
-    border-top: 1px solid #555; /* Input container top border */  
+    background-color: #3c3c3c;  
+    border-top: 1px solid #555;  
     width: 100%;  
     box-sizing: border-box;  
 }  
@@ -156,14 +173,16 @@ body {
     padding: 10px;  
     font-size: 16px;  
     font-family: Arial, sans-serif;  
-    background-color: #2d2d2d; /* Textarea background color */  
-    color: #d4d4d4; /* Textarea text color */  
-    border: 1px solid #555; /* Textarea border color */  
+    background-color: #2d2d2d;  
+    color: #d4d4d4;  
+    border: 1px solid #555;  
     border-radius: 5px;  
     margin-right: 10px;  
     resize: none;  
     max-height: 100px;  
     overflow-y: auto;  
+    word-wrap: break-word; /* Ensure long words break and wrap to the next line */  
+    overflow-wrap: break-word; /* Ensure long words break and wrap to the next line */  
 }  
   
 .input-container button {  
@@ -171,9 +190,9 @@ body {
     font-size: 14px;  
     cursor: pointer;  
     font-family: Arial, sans-serif;  
-    background-color: #007bff; /* Button background color */  
-    color: #ffffff; /* Button text color */  
-    border: 1px solid #007bff; /* Button border color */  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border: 1px solid #007bff;  
     border-radius: 5px;  
     transition: background-color 0.3s, border-color 0.3s;  
     display: flex;  
@@ -182,14 +201,14 @@ body {
 }  
   
 .input-container button svg {  
-    fill: #ffffff; /* SVG icon fill color */  
+    fill: #ffffff;  
     width: 20px;  
     height: 20px;  
 }  
   
 .input-container button:hover {  
-    background-color: #0056b3; /* Button background color on hover */  
-    border-color: #0056b3; /* Button border color on hover */  
+    background-color: #0056b3;  
+    border-color: #0056b3;  
 }  
   
 ::-webkit-scrollbar {  
@@ -197,98 +216,95 @@ body {
 }  
   
 ::-webkit-scrollbar-track {  
-    background: #2d2d2d; /* Scrollbar track color */  
+    background: #2d2d2d;  
 }  
   
 ::-webkit-scrollbar-thumb {  
-    background-color: #007bff; /* Scrollbar thumb color */  
+    background-color: #007bff;  
     border-radius: 6px;  
-    border: 3px solid #2d2d2d; /* Scrollbar thumb border */  
+    border: 3px solid #2d2d2d;  
 }  
   
 .light-theme {  
-    background-color: #ffffff; /* Light theme background color */  
-    color: #000000; /* Light theme text color */  
+    background-color: #ffffff;  
+    color: #000000;  
 }  
   
 .light-theme .header {  
-    background-color: #007bff; /* Light theme header background color */  
-    color: #ffffff; /* Light theme header text color */  
-    border-bottom: 1px solid #ccc; /* Light theme header bottom border */  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border-bottom: 1px solid #ccc;  
 }  
   
 .light-theme .input-container {  
-    background-color: #f1f1f1; /* Light theme input container background color */  
-    border-top: 1px solid #ccc; /* Light theme input container top border */  
+    background-color: #f1f1f1;  
+    border-top: 1px solid #ccc;  
 }  
   
 .light-theme .input-container textarea {  
-    background-color: #ffffff; /* Light theme textarea background color */  
-    color: #000000; /* Light theme textarea text color */  
+    background-color: #ffffff;  
+    color: #000000;  
 }  
   
 .light-theme .input-container button {  
-    background-color: #007bff; /* Light theme button background color */  
-    color: #ffffff; /* Light theme button text color */  
-    border: 1px solid #007bff; /* Light theme button border color */  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border: 1px solid #007bff;  
 }  
   
 .light-theme .input-container button:hover {  
-    background-color: #0056b3; /* Light theme button background color on hover */  
-    border-color: #0056b3; /* Light theme button border color on hover */  
+    background-color: #0056b3;  
+    border-color: #0056b3;  
 }  
   
 .light-theme .settings {  
-    background-color: #f1f1f1; /* Light theme settings background color */  
-    border-right: 1px solid #ccc; /* Light theme settings right border */  
+    background-color: #f1f1f1;  
+    border-right: 1px solid #ccc;  
 }  
   
-.light-theme .settings input,  
-.light-theme .settings textarea {  
-    background-color: #ffffff; /* Light theme input background color */  
-    color: #000000; /* Light theme input text color */  
-    border: 1px solid #ccc; /* Light theme input border color */  
+.light-theme .settings input, .light-theme .settings textarea {  
+    background-color: #ffffff;  
+    color: #000000;  
+    border: 1px solid #ccc;  
 }  
   
-.light-theme .settings button,  
-.light-theme .settings select {  
-    background-color: #007bff; /* Light theme button background color */  
-    color: #ffffff; /* Light theme button text color */  
-    border: 1px solid #007bff; /* Light theme button border color */  
+.light-theme .settings button, .light-theme .settings select {  
+    background-color: #007bff;  
+    color: #ffffff;  
+    border: 1px solid #007bff;  
 }  
   
-.light-theme .settings button:hover,  
-.light-theme .settings select:hover {  
-    background-color: #0056b3; /* Light theme button background color on hover */  
-    border-color: #0056b3; /* Light theme button border color on hover */  
+.light-theme .settings button:hover, .light-theme .settings select:hover {  
+    background-color: #0056b3;  
+    border-color: #0056b3;  
 }  
   
 .light-theme .chat-container {  
-    background-color: #f9f9f9; /* Light theme chat container background color */  
+    background-color: #f9f9f9;  
 }  
   
 .light-theme .message {  
-    background-color: #e0e0e0; /* Light theme message background color */  
+    background-color: #e0e0e0;  
 }  
   
 .light-theme .message.user {  
-    background-color: #cfe9ff; /* Light theme user message background color */  
+    background-color: #cfe9ff;  
 }  
   
 .light-theme ::-webkit-scrollbar-track {  
-    background: #f1f1f1; /* Light theme scrollbar track color */  
+    background: #f1f1f1;  
 }  
   
 .light-theme ::-webkit-scrollbar-thumb {  
-    background-color: #007bff; /* Light theme scrollbar thumb color */  
+    background-color: #007bff;  
     border-radius: 6px;  
-    border: 3px solid #f1f1f1; /* Light theme scrollbar thumb border */  
+    border: 3px solid #f1f1f1;  
 }  
   
 .resizer {  
     width: 10px;  
-    background: #555; /* Resizer background color */  
-    cursor: ew-resize; /* Resizer cursor type */  
+    background: #555;  
+    cursor: ew-resize;  
     position: relative;  
 }  
   
@@ -298,8 +314,8 @@ body {
     justify-content: center;  
     align-items: center;  
     padding: 20px;  
-    background-color: #1e1e1e; /* Prompt container background color */  
-    border: 1px solid #3c3c3c; /* Prompt container border color */  
+    background-color: #1e1e1e;  
+    border: 1px solid #3c3c3c;  
     border-radius: 10px;  
     width: 100%;  
 }  
@@ -322,17 +338,17 @@ body {
     justify-content: center;  
     width: 200px;  
     height: 100px;  
-    background-color: #3c3c3c; /* Prompt button background color */  
-    color: #d4d4d4; /* Prompt button text color */  
-    border: 1px solid #555; /* Prompt button border color */  
+    background-color: #3c3c3c;  
+    color: #d4d4d4;  
+    border: 1px solid #555;  
     border-radius: 10px;  
     cursor: pointer;  
     transition: background-color 0.3s, border-color 0.3s;  
 }  
   
 .prompt-button:hover {  
-    background-color: #2d2d2d; /* Prompt button background color on hover */  
-    border-color: #007bff; /* Prompt button border color on hover */  
+    background-color: #2d2d2d;  
+    border-color: #007bff;  
 }  
   
 .prompt-button span {  
@@ -341,7 +357,7 @@ body {
     text-align: center;  
 }  
   
-/* Tooltip styles */  
+/* 提示框樣式 */  
 .tooltip-container {  
     position: relative;  
     display: inline-block;  
@@ -352,8 +368,8 @@ body {
 .tooltip-container .tooltip-icon {  
     width: 16px;  
     height: 16px;  
-    background-color: #007bff; /* Tooltip icon background color */  
-    color: #fff; /* Tooltip icon text color */  
+    background-color: #007bff;  
+    color: #fff;  
     text-align: center;  
     border-radius: 50%;  
     display: inline-flex;  
@@ -365,8 +381,8 @@ body {
 .tooltip-container .tooltip-text {  
     visibility: hidden;  
     width: 200px;  
-    background-color: #555; /* Tooltip background color */  
-    color: #fff; /* Tooltip text color */  
+    background-color: #555;  
+    color: #fff;  
     text-align: center;  
     border-radius: 5px;  
     padding: 5px;  
@@ -393,5 +409,5 @@ body {
     transform: translateX(-50%);  
     border-width: 5px;  
     border-style: solid;  
-    border-color: #555 transparent transparent transparent; /* Tooltip arrow color */  
+    border-color: #555 transparent transparent transparent;  
 }  
