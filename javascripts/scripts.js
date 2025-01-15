@@ -1,22 +1,20 @@
-let darkTheme = true; // Boolean to track the current theme  
-let messages = []; // Array to store chat messages  
-let generating = false; // Boolean to track if a response is being generated  
-let cachedResults = []; // Array to cache search results  
-  
-// Initialize Markdown-it with options  
+let darkTheme = true;  
+let messages = [];  
+let generating = false;  
+let cachedResults = []; // 緩存搜索結果 
+let modelInstructionsAdded = false; // Variable to track if model instructions have been added   
 const md = window.markdownit({  
-    html: true, // Enable HTML tags  
-    breaks: true, // Convert line breaks to <br>  
-    linkify: true // Auto-detect links  
+    html: true, // 启用 HTML 标签  
+    breaks: true, // 将换行符转换为 <br>  
+    linkify: true // 自动识别链接  
 });  
   
-// Event listener for when the DOM is fully loaded  
 document.addEventListener('DOMContentLoaded', function() {  
-    checkMode(); // Check the selected mode  
-    checkInputRange('max-tokens', 1, 4096); // Check range for max tokens input  
-    checkInputRange('top-p', 0.0, 1.0); // Check range for top-p input  
-    checkInputRange('temperature', 0.0, 1.0); // Check range for temperature input  
-    checkInputRange('message-count', 1, 20); // Check range for message count input  
+    checkMode();  
+    checkInputRange('max-tokens', 1, 4096);  
+    checkInputRange('top-p', 0.0, 1.0);  
+    checkInputRange('temperature', 0.0, 1.0);  
+    checkInputRange('message-count', 1, 20);  
   
     // Initialize textarea height  
     adjustTextareaHeight();  
@@ -67,14 +65,17 @@ function usePrompt(prompt) {
     sendMessage();  
 }  
   
-// Send message function  
 function sendMessage() {  
     const userInput = document.getElementById('user-input').value.trim();  
     const modelInstructions = document.getElementById('model-instructions').value.trim();  
+  
     if (!userInput && !modelInstructions) return;  
   
-    addMessage('user', userInput);  
-    messages.push({ role: 'user', content: userInput });  
+    // Add user message to chat container only if there is user input  
+    if (userInput) {  
+        addMessage('user', userInput);  
+        messages.push({ role: 'user', content: userInput });  
+    }  
   
     const mode = document.getElementById('mode-select').value;  
     const endpoint = mode === 'document' ? '/ask' : '/ask_openai';  
@@ -84,6 +85,7 @@ function sendMessage() {
     const temperature = parseFloat(document.getElementById('temperature').value);  
     const messageCount = parseInt(document.getElementById('message-count').value);  
   
+    // Prepare data for the API request  
     const data = {  
         messages: messages.slice(-messageCount), // Ensure only recent messages are sent  
         max_tokens: maxTokens,  
@@ -91,6 +93,13 @@ function sendMessage() {
         temperature: temperature  
     };  
   
+    // Add model instructions as a system message if not already added  
+    if (modelInstructions && !modelInstructionsAdded) {  
+        messages.unshift({ role: 'system', content: modelInstructions });  
+        modelInstructionsAdded = true; // Set flag to true to avoid adding it again  
+    }  
+  
+    // Add model instructions to the data but not to the messages array again  
     if (modelInstructions) {  
         data.messages.unshift({ role: 'system', content: modelInstructions });  
     }  
@@ -101,7 +110,7 @@ function sendMessage() {
         data.messages.push({ role: 'system', content: context }); // Add context to messages  
     }  
   
-    console.log('Data sent:', data); // Log data sent for debugging  
+    console.log('Data sent:', data); // Debugging: log the data being sent  
   
     toggleButtons(true);  
   
@@ -135,56 +144,68 @@ function sendMessage() {
         toggleButtons(false);  
     });  
   
-    document.getElementById('user-input').value = ''; // Clear input field  
-    adjustTextareaHeight(); // Ensure height is adjusted after sending  
+    // Clear input field and adjust textarea height  
+    document.getElementById('user-input').value = '';  
+    adjustTextareaHeight();  
 }  
   
-// Add message to chat container  
+
 function addMessage(role, content) {  
     const chatContainer = document.getElementById('chat-container');  
     const messageDiv = document.createElement('div');  
     messageDiv.classList.add('message', role);  
   
-    // Convert Markdown to HTML  
-    const htmlContent = md.render(content);  
-    console.log('Generated HTML:', htmlContent); // Log generated HTML content  
+    const markdownContainer = document.createElement('div');  
+    markdownContainer.classList.add('markdown-content');  
   
-    // Check if message contains code block  
+    // Check if the content contains code blocks  
     if (content.includes('```')) {  
-        const parts = content.split('```');  
+        const parts = content.split(/```/g);  
         parts.forEach((part, index) => {  
             if (index % 2 === 0) {  
+                // Non-code part  
                 const textPart = document.createElement('div');  
                 textPart.innerHTML = md.render(part);  
-                messageDiv.appendChild(textPart);  
+                markdownContainer.appendChild(textPart);  
             } else {  
+                // Code part  
                 const codeBlock = document.createElement('div');  
                 codeBlock.classList.add('code-block');  
                 const pre = document.createElement('pre');  
-                pre.textContent = part;  
+                pre.textContent = part.trim(); // Remove any leading/trailing whitespace  
                 codeBlock.appendChild(pre);  
   
-                const copyButton = document.createElement('button');  
-                copyButton.classList.add('copy-button');  
-                copyButton.textContent = 'Copy';  
-                copyButton.addEventListener('click', () => {  
-                    navigator.clipboard.writeText(part).then(() => {  
-                        copyButton.textContent = 'Copied!';  
-                        setTimeout(() => { copyButton.textContent = 'Copy'; }, 2000);  
+                // Add copy button for the assistant role  
+                if (role === 'assistant') {  
+                    const copyButton = document.createElement('button');  
+                    copyButton.classList.add('copy-button');  
+                    copyButton.textContent = 'Copy';  
+                    copyButton.addEventListener('click', async () => {  
+                        try {  
+                            await navigator.clipboard.writeText(part);  
+                            copyButton.textContent = 'Copied!';  
+                            setTimeout(() => { copyButton.textContent = 'Copy'; }, 2000);  
+                        } catch (err) {  
+                            copyButton.textContent = 'Failed to copy';  
+                            setTimeout(() => { copyButton.textContent = 'Copy'; }, 2000);  
+                        }  
                     });  
-                });  
-                codeBlock.appendChild(copyButton);  
+                    codeBlock.appendChild(copyButton);  
+                }  
   
-                messageDiv.appendChild(codeBlock);  
+                markdownContainer.appendChild(codeBlock);  
             }  
         });  
     } else {  
-        messageDiv.innerHTML = htmlContent;  
+        markdownContainer.innerHTML = md.render(content);  
     }  
   
+    messageDiv.appendChild(markdownContainer);  
     chatContainer.appendChild(messageDiv);  
     chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom  
 }  
+  
+
   
 // Toggle theme  
 function toggleTheme() {  
@@ -238,8 +259,8 @@ function uploadFile() {
         console.error('Error:', error);  
         alert(`Error: ${error.message}`);  
     });  
-}  
-  
+} 
+
 // Function to resize the settings panel  
 const settings = document.getElementById('settings');  
 const resizer = document.getElementById('resizer');  
