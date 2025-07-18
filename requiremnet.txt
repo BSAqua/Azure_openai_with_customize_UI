@@ -1,8 +1,0 @@
-Flask  
-requests  
-flask-cors  
-azure-search-documents  
-azure-core  
-azure-storage-blob  
-python-docx  
-PyMuPDF
