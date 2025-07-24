@@ -1,170 +1,296 @@
+import sys  
 import logging  
 import io  
-from flask import Flask, render_template, request, jsonify  
+import time  
+import re  
+import json  
+from uuid import uuid4  
+  
+import tiktoken  
 import requests  
+from flask import Flask, render_template, request, jsonify  
 from flask_cors import CORS  
+  
 from azure.search.documents import SearchClient  
 from azure.search.documents.models import QueryType  
 from azure.core.credentials import AzureKeyCredential  
 from azure.storage.blob import BlobServiceClient  
-from docx import Document  
-import fitz   
   
-# Configure logging  
-logging.basicConfig(level=logging.INFO)  
+# 如果你還需要文件分片上傳的功能，可保留以下 import  
+import fitz                              # PyMuPDF for PDF extraction  
+from docx import Document as DocxDocument  # python-docx for .docx/.doc extraction  
+from pptx import Presentation as PptxPresentation  # python-pptx for .pptx/.ppt extraction  
+  
+# -------------------------------------------------------------------  
+# 1. 設定 UTF-8 Logger  
 logger = logging.getLogger(__name__)  
+logger.setLevel(logging.INFO)  
   
+utf8_handler = logging.StreamHandler(stream=sys.stdout)  
+utf8_handler.setLevel(logging.INFO)  
+formatter = logging.Formatter(  
+    fmt="%(asctime)s %(levelname)s: %(message)s",  
+    datefmt="%Y-%m-%d %H:%M:%S"  
+)  
+utf8_handler.setFormatter(formatter)  
+  
+logger.handlers.clear()  
+logger.addHandler(utf8_handler)  
+  
+# -------------------------------------------------------------------  
 app = Flask(__name__)  
-CORS(app)  # Enable CORS  
+CORS(app)  
   
-# Azure OpenAI configuration   
-endpoint = 'Your_Azure_OpenAi_endpoint'  
-api_key = 'Your_Azure_OpenAi_API_key'  
-  
-headers = {  
-    'Content-Type': 'application/json',  
-    'api-key': api_key  
+# -------------------------------------------------------------------  
+# Azure OpenAI 設定  
+OAI_ENDPOINT = (  
+    "Your_Azure_OpenAi_endpoint"  
+)  
+OAI_API_KEY = "Your_Azure_OpenAi_API_key" 
+OAI_HEADERS = {  
+    "Content-Type": "application/json",  
+    "api-key": OAI_API_KEY  
 }  
   
-# Azure Cognitive Search configuration 
-search_service_endpoint = "Your_Azure_search_service_endpoint"  
-search_api_key = "Your_Azure_search_service_API_key"  
-index_name = "index"  # Replace with your indexe name
-indexer_name = "indexer"  # Replace with your indexer name  
+# -------------------------------------------------------------------  
+# Azure Cognitive Search 設定  
+SEARCH_ENDPOINT = "Your_Azure_search_service_endpoint"  
+SEARCH_API_KEY = "Your_Azure_search_service_API_key"  
+INDEX_NAME = "Your_Azure_Indexe_name"  # Replace with your index name 
   
-search_client = SearchClient(endpoint=search_service_endpoint,  
-                             index_name=index_name,  
-                             credential=AzureKeyCredential(search_api_key))  
+search_client = SearchClient(  
+    endpoint=SEARCH_ENDPOINT,  
+    index_name=INDEX_NAME,  
+    credential=AzureKeyCredential(SEARCH_API_KEY)  
+)  
   
-# Azure Storage account configuration  
-storage_account_connection_string = "Your_storage_account_connection_string"  
-blob_service_client = BlobServiceClient.from_connection_string(storage_account_connection_string)  
-container_name = "contanier" # Replace with your container name  
+# -------------------------------------------------------------------  
+# Azure Blob Storage 設定  
+STORAGE_CONNECTION_STRING = (  
+    "DefaultEndpointsProtocol=https;"  
+    "AccountName=onyourdatathiai;"  
+    "AccountKey=Y1R3pb5QgNlYHhQ8Og8UteXhOf0xkWRs//QW43yCXjsJOO/"  
+    "RfFABPIfEEBm5nhCoo4G+T4l0ws4S+AStVjuBXA==;"  
+    "EndpointSuffix=core.windows.net"  
+)    
+BLOB_CONTAINER_NAME = "Your_Azure_Container_name"               # Replace with your container name  
+INDEXER_NAME = "Your_Azure_Indexer_name"          # Replace with your indexer name  
   
+blob_service_client = BlobServiceClient.from_connection_string(  
+    STORAGE_CONNECTION_STRING  
+)  
+  
+# -------------------------------------------------------------------  
+def count_tokens_from_messages(messages, model="gpt-4o-test"):  
+    """  
+    估算一組 chat messages 的 token 數量（僅用於 log）。  
+    """  
+    try:  
+        encoding = tiktoken.encoding_for_model(model)  
+    except KeyError:  
+        encoding = tiktoken.get_encoding("cl100k_base")  
+    total = 0  
+    for msg in messages:  
+        total += 4  # <im_start> + role/name  
+        for v in msg.values():  
+            total += len(encoding.encode(v))  
+    total += 2  # <im_end>  
+    return total  
+  
+def chunk_text(text, chunk_size=1000, overlap=200):  
+    """  
+    將文字按字元數分片（可選擇保留，用於舊版 upload）。  
+    """  
+    chunks = []  
+    start = 0  
+    length = len(text)  
+    while start < length:  
+        end = min(start + chunk_size, length)  
+        chunks.append(text[start:end])  
+        start += chunk_size - overlap  
+    return chunks  
+  
+def extract_text_from_pdf(stream_bytes):  
+    doc = fitz.open(stream=stream_bytes, filetype="pdf")  
+    text = ""  
+    for page in doc:  
+        text += page.get_text()  
+    return text  
+  
+def extract_text_from_docx(stream_bytes):  
+    doc = DocxDocument(io.BytesIO(stream_bytes))  
+    paragraphs = [p.text for p in doc.paragraphs if p.text]  
+    return "\n".join(paragraphs)  
+  
+def extract_text_from_pptx(stream_bytes):  
+    prs = PptxPresentation(io.BytesIO(stream_bytes))  
+    text = ""  
+    for slide in prs.slides:  
+        for shape in slide.shapes:  
+            if hasattr(shape, "text") and shape.text:  
+                text += shape.text + "\n"  
+    return text  
+  
+# -------------------------------------------------------------------  
 @app.route('/')  
 def index():  
     return render_template('index.html')  
   
+# -------------------------------------------------------------------  
 @app.route('/ask_openai', methods=['POST'])  
 def ask_openai():  
     try:  
         data = request.json  
-        logger.info("接收到的數據: %s", data)  # Log received data for debugging
+        logger.info("[/ask_openai] Received data: %s", data)  
   
-        # Ensure data contains 'messages' field and it is a list
         if 'messages' not in data or not isinstance(data['messages'], list):  
-            raise ValueError("無效的數據格式: 'messages' 字段是必需的並且應該是個列表")  
+            raise ValueError("'messages' field must exist and be a list")  
   
-        response = requests.post(endpoint, headers=headers, json=data)  
-        logger.info("OpenAI API 回應: %s %s", response.status_code, response.text)  # Log API response for debugging 
-        response.raise_for_status()  
-        return jsonify(response.json())  
-    except requests.exceptions.RequestException as e:  
-        logger.error("在 /ask_openai 中的錯誤: %s", str(e))  
-        return jsonify({"error": str(e)}), 500  
+        estimated = count_tokens_from_messages(data['messages'])  
+        logger.info("[/ask_openai] Estimated prompt tokens: %d", estimated)  
+  
+        start = time.time()  
+        resp = requests.post(OAI_ENDPOINT, headers=OAI_HEADERS, json=data)  
+        elapsed = time.time() - start  
+  
+        resp.raise_for_status()  
+        result = resp.json()  
+        logger.info("[/ask_openai] Response: %s", result)  
+  
+        usage = result.get("usage", {})  
+        response_tokens = usage.get("completion_tokens", 0)  
+        tps = response_tokens / elapsed if elapsed > 0 else None  
+        logger.info("[/ask_openai] completion_tokens=%d, TPS=%.2f", response_tokens, tps)  
+  
+        result["response_tokens"] = response_tokens  
+        result["tps"] = tps  
+  
+        return jsonify(result)  
     except ValueError as ve:  
-        logger.error("無效的數據格式: %s", str(ve))  
+        logger.error("[/ask_openai] Invalid data format: %s", ve)  
         return jsonify({"error": str(ve)}), 400  
+    except Exception as e:  
+        logger.error("[/ask_openai] Error: %s", e)  
+        return jsonify({"error": str(e)}), 500  
   
+# -------------------------------------------------------------------  
 @app.route('/search', methods=['POST'])  
 def search():  
     try:  
         data = request.json  
         query = data.get('query', '')  
         results = search_client.search(query, query_type=QueryType.SIMPLE)  
-        results_list = [result for result in results]  
-        return jsonify(results_list)  
+        return jsonify([r for r in results])  
     except Exception as e:  
-        logger.error("在 /search 中的錯誤: %s", str(e))  
+        logger.error("[/search] Error: %s", e)  
         return jsonify({"error": str(e)}), 500  
   
+# -------------------------------------------------------------------  
 @app.route('/upload', methods=['POST'])  
 def upload():  
+    """  
+    上傳檔案至 Azure Blob Storage，並觸發 Azure Cognitive Search 的 Indexer。  
+    """  
     try:  
         file = request.files['file']  
-        overwrite = request.form.get('overwrite') == 'true'  # Get the overwrite option  
-        blob_client = blob_service_client.get_blob_client(container=container_name, blob=file.filename)  
-          
+        overwrite = request.form.get('overwrite') == 'true'  
+        filename = file.filename  
+  
+        blob_client = blob_service_client.get_blob_client(  
+            container=BLOB_CONTAINER_NAME,  
+            blob=filename  
+        )  
+  
+        logger.info("[/upload] 收到檔案: %s, overwrite=%s", filename, overwrite)  
+  
         if not overwrite and blob_client.exists():  
-            return jsonify({"message": "文件已存在，未選擇覆蓋!"}), 400  
+            logger.info("[/upload] 檔案已存在且未選擇覆蓋: %s", filename)  
+            return jsonify({"message": "檔案已存在，未覆蓋。"}), 400  
   
+        # 上傳檔案到 Blob Storage  
         blob_client.upload_blob(file, overwrite=overwrite)  
+        logger.info("[/upload] 成功上傳至 Blob Storage: %s", filename)  
   
-        # Trigger indexer run  
-        indexer_url = f"{search_service_endpoint}/indexers/{indexer_name}/run?api-version=2020-06-30"  
-        indexer_response = requests.post(indexer_url, headers={  
-            'Content-Type': 'application/json',  
-            'api-key': search_api_key  
-        })  
+        # 觸發 Search Indexer  
+        idx_url = f"{SEARCH_ENDPOINT}/indexers/{INDEXER_NAME}/run?api-version=2020-06-30"  
+        idx_resp = requests.post(  
+            idx_url,  
+            headers={  
+                "Content-Type": "application/json",  
+                "api-key": SEARCH_API_KEY  
+            }  
+        )  
   
-        if indexer_response.status_code == 202:  
-            return jsonify({"message": "文件上傳成功並且索引器已觸發!"})  
+        if idx_resp.status_code == 202:  
+            logger.info("[/upload] 成功觸發 Indexer: %s", INDEXER_NAME)  
+            return jsonify({"message": "檔案上傳成功，Indexer 已觸發。"}), 200  
         else:  
-            return jsonify({"message": "文件上傳成功，但觸發索引器失敗!", "error": indexer_response.text}), 500  
-    except Exception as e:  
-        logger.error("在 /upload 中的錯誤: %s", str(e))  
-        return jsonify({"error": str(e)}), 500   
+            logger.error("[/upload] 觸發 Indexer 失敗: %s", idx_resp.text)  
+            return jsonify({  
+                "message": "檔案上傳成功，但觸發 Indexer 失敗。",  
+                "error": idx_resp.text  
+            }), 500  
   
+    except Exception as e:  
+        logger.error("[/upload] 發生錯誤: %s", e)  
+        return jsonify({"error": str(e)}), 500  
+  
+# -------------------------------------------------------------------  
 @app.route('/ask', methods=['POST'])  
 def ask():  
     try:  
         data = request.json  
         query = data.get('query', '')  
-        max_tokens = data.get('max_tokens', 60)  
+        max_tokens = data.get('max_tokens', 4096)  
         top_p = data.get('top_p', 1.0)  
         temperature = data.get('temperature', 0.7)  
         messages = data.get('messages', [])  
   
-        logger.info("接收到的數據: %s", data)  
-        logger.info("查詢: %s", query)  
+        logger.info("[/ask] Received data: %s", data)  
   
-        # Retrieve document contents from Azure Blob Storage  
-        blob_list = blob_service_client.get_container_client(container_name).list_blobs()  
-        documents = []  
-        for blob in blob_list:  
-            blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob.name)  
-            blob_data = blob_client.download_blob().readall()  
-              
-            try:  
-                if blob.name.endswith('.docx'):  
-                    # Handle .docx files  
-                    doc = Document(io.BytesIO(blob_data))  
-                    doc_text = '\n'.join([paragraph.text for paragraph in doc.paragraphs])  
-                    documents.append(doc_text)  
-                elif blob.name.endswith('.pdf'):  
-                    # Handle .pdf files  
-                    pdf_document = fitz.open(stream=blob_data, filetype="pdf")  
-                    pdf_text = ""  
-                    for page_num in range(pdf_document.page_count):  
-                        page = pdf_document.load_page(page_num)  
-                        pdf_text += page.get_text()  
-                    documents.append(pdf_text)  
-                else:  
-                    logger.error("不支持的文件類型: %s", blob.name)  
-            except Exception as e:  
-                logger.error("在處理文件 %s 時出錯: %s", blob.name, str(e))  
+        # 1) Retrieval from Cognitive Search  
+        search_results = search_client.search(  
+            query, top=3, query_type=QueryType.SIMPLE  
+        )  
+        retrieved = [r.get("content", "") for r in search_results]  
   
-        logger.info("找到的文檔: %s", documents)  
+        # 2) Prepend retrieved chunks as system messages  
+        for chunk in retrieved:  
+            messages.append({"role": "system", "content": chunk})  
   
-        # Add retrieved document contents to messages    
-        for doc in documents:  
-            messages.append({"role": "system", "content": doc})  
+        logger.info("[/ask] final messages payload: %s", json.dumps(messages, ensure_ascii=False, indent=2))  
   
-        openai_data = {  
+        # 3) Log estimated tokens  
+        estimated = count_tokens_from_messages(messages)  
+        logger.info("[/ask] Estimated prompt tokens: %d", estimated)  
+  
+        payload = {  
             "messages": messages,  
             "max_tokens": max_tokens,  
             "top_p": top_p,  
             "temperature": temperature  
         }  
-        logger.info("OpenAI 數據: %s", openai_data)  
   
-        response = requests.post(endpoint, headers=headers, json=openai_data)  
-        logger.info("OpenAI API 回應: %s %s", response.status_code, response.text)  
-        response.raise_for_status()  
-        return jsonify(response.json())  
+        # 4) Call Azure OpenAI  
+        start = time.time()  
+        resp = requests.post(OAI_ENDPOINT, headers=OAI_HEADERS, json=payload)  
+        elapsed = time.time() - start  
+        resp.raise_for_status()  
+        result = resp.json()  
+        logger.info("[/ask] Response: %s", result)  
+  
+        # 5) 附加 metadata  
+        usage = result.get("usage", {})  
+        completion_tokens = usage.get("completion_tokens", 0)  
+        tps = completion_tokens / elapsed if elapsed > 0 else None  
+        result["response_tokens"] = completion_tokens  
+        result["tps"] = tps  
+  
+        return jsonify(result)  
     except Exception as e:  
-        logger.error("在 /ask 中的錯誤: %s", str(e))  
+        logger.error("[/ask] Error: %s", e)  
         return jsonify({"error": str(e)}), 500  
   
+# -------------------------------------------------------------------  
 if __name__ == '__main__':  
     app.run(debug=True, use_reloader=False)  

@@ -109,8 +109,8 @@ function sendMessage() {
   
     if (mode === 'document') {  
         data.query = userInput; // Add query field  
-        const context = cachedResults.map(result => result.chunk).join('\n\n'); // Combine all cached content as context  
-        data.messages.push({ role: 'system', content: context }); // Add context to messages  
+        // const context = cachedResults.map(result => result.chunk).join('\n\n'); // Combine all cached content as context  
+        // data.messages.push({ role: 'system', content: context }); // Add context to messages  
     }  
   
     console.log('Data sent:', data); // Debugging: log the data being sent  
@@ -317,3 +317,129 @@ function checkInputRange(inputId, min, max) {
         }  
     });  
 }  
+
+document.addEventListener('DOMContentLoaded', () => {  
+  // Initialize markdown-it with Prism highlighter  
+  const md = window.markdownit({  
+    html: true,  
+    linkify: true,  
+    typographer: true,  
+    highlight: (str, lang) => {  
+      if (lang && Prism.languages[lang]) {  
+        try {  
+          const highlighted = Prism.highlight(str, Prism.languages[lang], lang)  
+          return `<pre class="language-${lang}"><code>${highlighted}</code></pre>`  
+        } catch (_) {}  
+      }  
+      const escaped = md.utils.escapeHtml(str)  
+      return `<pre class="language"><code>${escaped}</code></pre>`  
+    }  
+  })  
+  
+  // Elements  
+  const inputEl     = document.querySelector('.input-container textarea')  
+  const sendBtn     = document.querySelector('.input-container button')  
+  const chatEl      = document.querySelector('.chat-container')  
+  const themeToggle = document.getElementById('theme-toggle')  
+  const resizer     = document.querySelector('.resizer')  
+  const settingsPanel = document.querySelector('.settings')  
+  
+  // Append a message bubble to the chat  
+  function appendMessage(role, content) {  
+    const msgEl = document.createElement('div')  
+    msgEl.classList.add('message', role)  
+  
+    const mdEl = document.createElement('div')  
+    mdEl.classList.add('markdown-content')  
+    mdEl.innerHTML = md.render(content)  
+  
+    msgEl.appendChild(mdEl)  
+    chatEl.appendChild(msgEl)  
+    chatEl.scrollTop = chatEl.scrollHeight  
+  
+    addCopyButtons(mdEl)  
+    return mdEl  
+  }  
+  
+  // Add a copy-button to each <pre> if not already present  
+  function addCopyButtons(container) {  
+    container.querySelectorAll('pre[class*="language-"]').forEach(pre => {  
+      if (pre.querySelector('.copy-button')) return  
+      const btn = document.createElement('button')  
+      btn.className   = 'copy-button'  
+      btn.textContent = 'Copy'  
+      pre.appendChild(btn)  
+    })  
+  }  
+  
+  // Delegate clicks on copy-buttons  
+  document.addEventListener('click', e => {  
+    if (!e.target.matches('.copy-button')) return  
+    const codeEl = e.target.previousElementSibling  
+    if (!codeEl) return  
+    const text = codeEl.textContent  
+    navigator.clipboard.writeText(text)  
+    e.target.textContent = 'Copied'  
+    setTimeout(() => { e.target.textContent = 'Copy' }, 2000)  
+  })  
+  
+  // Stub: send user message & mock assistant response  
+  // Replace this with your real fetch/SSE logic  
+  function sendMessage() {  
+    const text = inputEl.value.trim()  
+    if (!text) return  
+    appendMessage('user', text)  
+    inputEl.value = ''  
+  
+    // mock assistant reply  
+    setTimeout(() => {  
+      appendMessage(  
+        'assistant',  
+        'Here’s a demo reply with code:\n\n```js\nconsole.log("Hello World!");\n```'  
+      )  
+    }, 500)  
+  }  
+  
+  // Bind send button + Enter key  
+  sendBtn.addEventListener('click', sendMessage)  
+  inputEl.addEventListener('keydown', e => {  
+    if (e.key === 'Enter' && !e.shiftKey) {  
+      e.preventDefault()  
+      sendMessage()  
+    }  
+  })  
+  
+  // Theme toggle (assumes a checkbox#theme-toggle in your .settings)  
+  if (themeToggle) {  
+    themeToggle.addEventListener('change', () => {  
+      document.body.classList.toggle('light-theme', themeToggle.checked)  
+      document.body.classList.toggle('dark-theme', !themeToggle.checked)  
+    })  
+  }  
+  
+  // Resizer for the settings panel  
+  let isResizing = false  
+  let lastX = 0  
+  
+  resizer.addEventListener('mousedown', e => {  
+    isResizing = true  
+    lastX = e.clientX  
+    document.body.style.cursor = 'ew-resize'  
+    e.preventDefault()  
+  })  
+  
+  document.addEventListener('mousemove', e => {  
+    if (!isResizing) return  
+    const dx = e.clientX - lastX  
+    const newWidth = settingsPanel.offsetWidth + dx  
+    settingsPanel.style.maxWidth = newWidth + 'px'  
+    lastX = e.clientX  
+  })  
+  
+  document.addEventListener('mouseup', () => {  
+    if (isResizing) {  
+      isResizing = false  
+      document.body.style.cursor = ''  
+    }  
+  })  
+})  
